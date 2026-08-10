@@ -495,30 +495,72 @@ async function enviar(datos){
   
   return new Promise((resolve, reject) => {
     const timeout = setTimeout(() => {
-      reject(new Error('Tiempo de espera agotado. Revisá tu conexión.'));
-    }, 30000);
+      reject(new Error('La conexión tardó demasiado. Revisá tu internet e intentá de nuevo.'));
+    }, 60000); // 60 segundos para móviles (conexiones más lentas)
     
-    // Usamos fetch con no-cors para evitar el bloqueo
-    fetch(CONFIG.API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(datos)
-    })
-    .then(() => {
+    // Crear iframe oculto
+    const iframe = document.createElement('iframe');
+    iframe.name = 'submit_frame_' + Date.now();
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+    
+    // Crear formulario real (no fetch)
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = CONFIG.API_URL;
+    form.target = iframe.name;
+    form.style.display = 'none';
+    
+    // Campo con los datos
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = 'payload';
+    input.value = JSON.stringify(datos);
+    form.appendChild(input);
+    
+    document.body.appendChild(form);
+    
+    // Escuchar respuesta
+    let responded = false;
+    iframe.onload = () => {
+      if (responded) return;
+      responded = true;
       clearTimeout(timeout);
-      // Con no-cors no podemos leer la respuesta, pero el script se ejecuta
-      // Damos tiempo para que Apps Script procese
+      
+      // Intentar leer respuesta (puede fallar por CORS, pero el envío ya se hizo)
+      try {
+        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
+        const text = iframeDoc.body.textContent || iframeDoc.documentElement.textContent;
+        if (text) {
+          const response = JSON.parse(text);
+          if (response.ok) {
+            resolve({ ok: true, folio: response.folio || datos.folio });
+          } else {
+            reject(new Error(response.error || 'Error al guardar'));
+          }
+          return;
+        }
+      } catch(e) {
+        // Cross-origin: no podemos leer, pero el request se envió
+      }
+      
+      // Si llegamos acá, asumimos que funcionó (el script confirmó con testPost)
+      resolve({ ok: true, folio: datos.folio });
+      
+      // Limpiar
       setTimeout(() => {
-        resolve({ ok: true, folio: datos.folio });
-      }, 1000);
-    })
-    .catch(err => {
+        if (form.parentNode) document.body.removeChild(form);
+        if (iframe.parentNode) document.body.removeChild(iframe);
+      }, 500);
+    };
+    
+    // Enviar
+    try {
+      form.submit();
+    } catch(e) {
       clearTimeout(timeout);
-      reject(new Error('Error de conexión: ' + err.message));
-    });
+      reject(new Error('No se pudo enviar. Revisá tu conexión.'));
+    }
   });
 }
 
