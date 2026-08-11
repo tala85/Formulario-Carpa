@@ -191,6 +191,7 @@
   </header>
 
   <div id="demoNote" class="banner warn" hidden>🧪 <span><b>Modo prueba:</b> todavía no conectaste la planilla de Google. Pegá tu URL en <code>CONFIG.API_URL</code> dentro del archivo.</span></div>
+ 
   <!-- Pantalla de inicio con 2 opciones -->
 <div id="pantallaInicio" class="banner info" style="padding:30px 20px">
   <div style="width:100%;text-align:center">
@@ -199,7 +200,7 @@
       <button type="button" id="btnNueva" style="font:inherit;font-weight:700;font-size:1.1rem;padding:20px 15px;
                     border:2px solid var(--ink);border-radius:12px;background:var(--green);
                     color:#fff;cursor:pointer;box-shadow:4px 4px 0 rgba(5,14,9,.3)">
-        <br>Nueva inscripción
+        🆕<br>Nueva inscripción
       </button>
       <button type="button" id="btnModificar" style="font:inherit;font-weight:700;font-size:1.1rem;padding:20px 15px;
                     border:2px solid var(--ink);border-radius:12px;background:var(--amber);
@@ -214,7 +215,7 @@
 <!-- Buscador de código (oculto al inicio) -->
 <div id="loadNote" class="banner info" hidden>
   <div style="width:100%">
-    <p style="margin-bottom:8px"><b>¿Querés modificar un formulario?</b> Pegá el codigo que se genero en tu carga anterior acá:</p>
+    <p style="margin-bottom:8px"><b>¿Querés modificar un formulario?</b> Pegá el código que se generó en tu carga anterior acá:</p>
     <div style="display:flex;gap:8px;flex-wrap:wrap">
       <input type="text" id="inputFolio" placeholder="Ej.: CMP-K64R2" maxlength="12"
              style="flex:1;min-width:180px;font:inherit;font-size:16px;padding:10px 12px;
@@ -233,11 +234,9 @@
 
 <!-- Formulario (oculto al inicio) -->
 <form id="form" novalidate hidden>
-  <div id="editNote" class="banner info" hidden>✏️ <span>Estás editando la inscripción <b id="editFolioLbl"></b>. Corregí o agregá lo que necesites y volvé a enviar: <b>se actualiza, no se duplica</b>.</span></div>
+    <div id="editNote" class="banner info" hidden>✏️ <span>Estás editando la inscripción <b id="editFolioLbl"></b>. Corregí o agregá lo que necesites y volvé a enviar: <b>se actualiza, no se duplica</b>.</span></div>
 
-  <form id="form" novalidate>
-
-    <section class="card reveal">
+      <section class="card reveal">
       <div class="card-head">
         <span class="stepnum">01</span>
         <div><h2>La agrupación</h2><p class="hint">Datos del club que participa del campamento.</p></div>
@@ -727,64 +726,28 @@ $('btnAdd').addEventListener('click', () => {
   actualizarQuitar(); actualizarResumen(); guardarBorrador();
   rowsEl.lastElementChild.scrollIntoView({behavior:'smooth', block:'nearest'});
 });
-
-/* ---- Inicio ---- */
-/* ---- Inicio ---- */
-(async function init(){
-  const folioURL = new URLSearchParams(location.search).get('folio');
-  if (folioURL){
-    // Si viene con ?folio= en la URL, va directo a editar
-    editando = true;
-    $('pantallaInicio').hidden = true;
-    $('loadNote').hidden = false;
-    $('inputFolio').value = folioURL.toUpperCase();
-    const res = await traer(folioURL);
-    if (res.ok){
-      folioActual = res.registro.folio;
-      pintarDatos(res.registro);
-      $('ok').checked = true;
-      $('sendLabel').textContent = 'GUARDAR CAMBIOS';
-      $('editFolioLbl').textContent = folioActual;
-      $('loadNote').hidden = true;
-      $('editNote').hidden = false;
-      $('form').hidden = false;
-    } else {
-      $('loadMsg').textContent = '⚠️ ' + res.error;
-      $('form').hidden = false;
-      pintarDatos({});
-    }
-  } else {
-    // Mostrar pantalla de inicio
-    const draft = localStorage.getItem(DRAFT_KEY);
-    if (draft){
-      try{ 
-        pintarDatos(JSON.parse(draft)); 
-        toast('Recuperamos tu borrador ✏️'); 
-      }
-      catch(e){ pintarDatos({}); }
-    } else {
-      pintarDatos({});
-    }
-  }
-  actualizarQuitar(); actualizarResumen();
-})();
 /* ---- Pantalla de inicio ---- */
 $('btnNueva').addEventListener('click', () => {
   $('pantallaInicio').hidden = true;
+  $('loadNote').hidden = true;
+  $('loadNote').style.display = 'none';
   $('form').hidden = false;
   $('form').scrollIntoView({behavior:'smooth', block:'start'});
 });
 
 $('btnModificar').addEventListener('click', () => {
   $('pantallaInicio').hidden = true;
+  $('form').hidden = true;
   $('loadNote').hidden = false;
+  $('loadNote').style.display = 'block';
   $('inputFolio').focus();
 });
 
 $('btnVolverInicio').addEventListener('click', () => {
   $('loadNote').hidden = true;
-  $('pantallaInicio').hidden = false;
+  $('loadNote').style.display = 'none';
   $('form').hidden = true;
+  $('pantallaInicio').hidden = false;
 });
 
 /* ---- Búsqueda manual de folio ---- */
@@ -800,6 +763,7 @@ $('btnBuscar').addEventListener('click', async () => {
     $('sendLabel').textContent = 'GUARDAR CAMBIOS';
     $('editFolioLbl').textContent = folioActual;
     $('loadNote').hidden = true;
+    $('loadNote').style.display = 'none';
     $('editNote').hidden = false;
     $('form').hidden = false;
     $('form').scrollIntoView({behavior:'smooth', block:'start'});
@@ -807,9 +771,61 @@ $('btnBuscar').addEventListener('click', async () => {
     $('loadMsg').textContent = '⚠️ ' + res.error;
   }
 });
+
 $('inputFolio').addEventListener('input', e => {
   e.target.value = e.target.value.toUpperCase();
 });
+
+/* ---- Inicio ---- */
+(async function init(){
+  const folioURL = new URLSearchParams(location.search).get('folio');
+  
+  // Ocultar todo primero de forma absoluta
+  $('pantallaInicio').hidden = true;
+  $('loadNote').hidden = true;
+  $('loadNote').style.display = 'none';
+  $('form').hidden = true;
+  $('editNote').hidden = true;
+  
+  if (folioURL){
+    // Si viene con ?folio= en la URL, va directo a editar
+    editando = true;
+    $('form').hidden = false;
+    $('loadNote').hidden = false;
+    $('loadNote').style.display = 'block';
+    $('inputFolio').value = folioURL.toUpperCase();
+    const res = await traer(folioURL);
+    if (res.ok){
+      folioActual = res.registro.folio;
+      pintarDatos(res.registro);
+      $('ok').checked = true;
+      $('sendLabel').textContent = 'GUARDAR CAMBIOS';
+      $('editFolioLbl').textContent = folioActual;
+      $('loadNote').hidden = true;
+      $('loadNote').style.display = 'none';
+      $('editNote').hidden = false;
+    } else {
+      $('loadMsg').textContent = '⚠️ ' + res.error;
+      pintarDatos({});
+    }
+  } else {
+    // Mostrar solo pantalla de inicio
+    $('pantallaInicio').hidden = false;
+    $('loadNote').hidden = true;
+    $('loadNote').style.display = 'none';
+    $('form').hidden = true;
+    $('editNote').hidden = true;
+    
+    const draft = localStorage.getItem(DRAFT_KEY);
+    if (draft){
+      try{ pintarDatos(JSON.parse(draft)); }
+      catch(e){ pintarDatos({}); }
+    } else {
+      pintarDatos({});
+    }
+  }
+  actualizarQuitar(); actualizarResumen();
+})();
 </script>
 </body>
 </html>
