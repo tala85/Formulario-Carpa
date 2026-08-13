@@ -600,22 +600,15 @@ async function buscarDuplicado(club, distrito){
       resolve(null);
     }, 15000);
     
-    const callbackName = 'cbdup_' + Date.now();
-    const iframe = document.createElement('iframe');
-    iframe.name = 'iframe_' + callbackName;
-    iframe.style.display = 'none';
-    
-    let resolved = false;
+    const callbackName = 'cbdup_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     
     function cleanup() {
       clearTimeout(timeout);
-      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      if (scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
       delete window[callbackName];
     }
     
     window[callbackName] = function(response) {
-      if (resolved) return;
-      resolved = true;
       cleanup();
       if (response && response.ok) {
         resolve(response.duplicado);
@@ -624,34 +617,14 @@ async function buscarDuplicado(club, distrito){
       }
     };
     
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = CONFIG.API_URL;
-    form.target = iframe.name;
-    form.style.display = 'none';
+    const scriptTag = document.createElement('script');
+    scriptTag.src = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito) + '&callback=' + callbackName;
+    scriptTag.onerror = function() {
+      cleanup();
+      resolve(null);
+    };
     
-    const inputClub = document.createElement('input');
-    inputClub.type = 'hidden';
-    inputClub.name = 'club';
-    inputClub.value = club;
-    
-    const inputDistrito = document.createElement('input');
-    inputDistrito.type = 'hidden';
-    inputDistrito.name = 'distrito';
-    inputDistrito.value = distrito;
-    
-    const inputCallback = document.createElement('input');
-    inputCallback.type = 'hidden';
-    inputCallback.name = 'callback';
-    inputCallback.value = callbackName;
-    
-    form.appendChild(inputClub);
-    form.appendChild(inputDistrito);
-    form.appendChild(inputCallback);
-    document.body.appendChild(form);
-    document.body.appendChild(iframe);
-    
-    form.submit();
+    document.body.appendChild(scriptTag);
   });
 }
 
@@ -777,58 +750,29 @@ async function traer(folio){
       resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión.' });
     }, 30000);
     
-    const callbackName = 'cb_' + Date.now();
-    const iframe = document.createElement('iframe');
-    iframe.name = 'iframe_' + callbackName;
-    iframe.style.display = 'none';
-    
-    let resolved = false;
+    const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
     
     function cleanup() {
       clearTimeout(timeout);
-      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      if (scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
       delete window[callbackName];
     }
     
     window[callbackName] = function(response) {
-      if (resolved) return;
-      resolved = true;
-      cleanup();
-      resolve(response);
+      if (response && typeof response === 'object') {
+        cleanup();
+        resolve(response);
+      }
     };
     
-    // Creamos un formulario temporal que hace GET al script
-    const form = document.createElement('form');
-    form.method = 'GET';
-    form.action = CONFIG.API_URL;
-    form.target = iframe.name;
-    form.style.display = 'none';
+    const scriptTag = document.createElement('script');
+    scriptTag.src = CONFIG.API_URL + '?folio=' + encodeURIComponent(folio) + '&callback=' + callbackName;
+    scriptTag.onerror = function() {
+      cleanup();
+      resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión.' });
+    };
     
-    const inputFolio = document.createElement('input');
-    inputFolio.type = 'hidden';
-    inputFolio.name = 'folio';
-    inputFolio.value = folio;
-    
-    const inputCallback = document.createElement('input');
-    inputCallback.type = 'hidden';
-    inputCallback.name = 'callback';
-    inputCallback.value = callbackName;
-    
-    form.appendChild(inputFolio);
-    form.appendChild(inputCallback);
-    document.body.appendChild(form);
-    document.body.appendChild(iframe);
-    
-    form.submit();
-    
-    // Limpiar después de un tiempo
-    setTimeout(() => {
-      if (!resolved) {
-        resolved = true;
-        cleanup();
-        resolve({ ok:false, error:'Tiempo de espera agotado' });
-      }
-    }, 35000);
+    document.body.appendChild(scriptTag);
   });
 }
 /* ---- Interacciones en vivo ---- */
