@@ -511,9 +511,6 @@ function codigo(n){
   return s;
 }
 async function enviar(datos){
-  console.log(' ENVIANDO DATOS:', datos);
-  console.log('📡 URL destino:', CONFIG.API_URL);
-  
   if (DEMO){
     await new Promise(r => setTimeout(r, 800));
     const folio = datos.folio || 'DEMO-' + codigo(4);
@@ -522,13 +519,11 @@ async function enviar(datos){
   }
   
   if (!datos.folio) datos.folio = 'CMP-' + codigo(5);
-  console.log('📋 Folio a enviar:', datos.folio);
   
-  // Usar fetch con no-cors (ya probado que funciona)
   const payload = JSON.stringify(datos);
   
   try {
-    const response = await fetch(CONFIG.API_URL, {
+    await fetch(CONFIG.API_URL, {
       method: 'POST',
       mode: 'no-cors',
       headers: {
@@ -537,14 +532,9 @@ async function enviar(datos){
       body: payload
     });
     
-    console.log('✅ Respuesta recibida (no-cors, no podemos leer el contenido)');
-    
-    // Con no-cors no podemos leer la respuesta, pero el envío se hizo
-    // Asumimos que funcionó si no hubo error de red
     return { ok: true, folio: datos.folio };
     
   } catch (err) {
-    console.error(' Error de red:', err);
     throw new Error('No se pudo conectar con el servidor. Revisá tu conexión.');
   }
 }
