@@ -594,66 +594,43 @@ async function enviar(datos){
 async function buscarDuplicado(club, distrito){
   if (DEMO) return null;
   
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const timeout = setTimeout(() => {
+      cleanup();
       resolve(null);
     }, 15000);
     
-    const iframe = document.createElement('iframe');
-    iframe.name = 'dup_frame_' + Date.now();
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    const callbackName = 'cbdup_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    let resolved = false;
+    let scriptTag = null;
     
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = CONFIG.API_URL;
-    form.target = iframe.name;
-    form.style.display = 'none';
-    
-    const inputClub = document.createElement('input');
-    inputClub.type = 'hidden';
-    inputClub.name = 'club';
-    inputClub.value = club;
-    form.appendChild(inputClub);
-    
-    const inputDistrito = document.createElement('input');
-    inputDistrito.type = 'hidden';
-    inputDistrito.name = 'distrito';
-    inputDistrito.value = distrito;
-    form.appendChild(inputDistrito);
-    
-    document.body.appendChild(form);
-    
-    let responded = false;
-    iframe.onload = () => {
-      if (responded) return;
-      responded = true;
+    function cleanup() {
       clearTimeout(timeout);
-      
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const text = iframeDoc.body.textContent || iframeDoc.documentElement.textContent;
-        if (text) {
-          const response = JSON.parse(text);
-          if (response.ok) {
-            resolve(response.duplicado);
-          } else {
-            resolve(null);
-          }
-        } else {
-          resolve(null);
-        }
-      } catch(e) {
+      if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
+      delete window[callbackName];
+    }
+    
+    window[callbackName] = function(response) {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      if (response && response.ok) {
+        resolve(response.duplicado);
+      } else {
         resolve(null);
       }
-      
-      setTimeout(() => {
-        if (form.parentNode) document.body.removeChild(form);
-        if (iframe.parentNode) document.body.removeChild(iframe);
-      }, 500);
     };
     
-    form.submit();
+    scriptTag = document.createElement('script');
+    scriptTag.src = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito) + '&callback=' + callbackName;
+    scriptTag.onerror = function() {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      resolve(null);
+    };
+    
+    document.body.appendChild(scriptTag);
   });
 }
 
@@ -773,56 +750,39 @@ async function traer(folio){
     return { ok:true, registro:{ folio: folio.toUpperCase(), club:d.club, distrito:d.distrito, acampantes:d.acampantes, carpas:d.carpas } };
   }
   
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const timeout = setTimeout(() => {
-      reject(new Error('No pudimos conectar. Revisá tu conexión.'));
+      cleanup();
+      resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión.' });
     }, 30000);
     
-    const iframe = document.createElement('iframe');
-    iframe.name = 'buscar_frame_' + Date.now();
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+    let resolved = false;
+    let scriptTag = null;
     
-    const form = document.createElement('form');
-    form.method = 'POST';
-    form.action = CONFIG.API_URL;
-    form.target = iframe.name;
-    form.style.display = 'none';
-    
-    const inputBuscar = document.createElement('input');
-    inputBuscar.type = 'hidden';
-    inputBuscar.name = 'buscar';
-    inputBuscar.value = folio;
-    form.appendChild(inputBuscar);
-    
-    document.body.appendChild(form);
-    
-    let responded = false;
-    iframe.onload = () => {
-      if (responded) return;
-      responded = true;
+    function cleanup() {
       clearTimeout(timeout);
-      
-      try {
-        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-        const text = iframeDoc.body.textContent || iframeDoc.documentElement.textContent;
-        if (text) {
-          const response = JSON.parse(text);
-          resolve(response);
-        } else {
-          reject(new Error('No se recibió respuesta'));
-        }
-      } catch(e) {
-        reject(new Error('Error al leer respuesta'));
-      }
-      
-      setTimeout(() => {
-        if (form.parentNode) document.body.removeChild(form);
-        if (iframe.parentNode) document.body.removeChild(iframe);
-      }, 500);
+      if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
+      delete window[callbackName];
+    }
+    
+    window[callbackName] = function(response) {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      resolve(response);
     };
     
-    form.submit();
+    scriptTag = document.createElement('script');
+    scriptTag.src = CONFIG.API_URL + '?folio=' + encodeURIComponent(folio) + '&callback=' + callbackName;
+    scriptTag.onerror = function() {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión.' });
+    };
+    
+    document.body.appendChild(scriptTag);
   });
 }
 /* ---- Interacciones en vivo ---- */
