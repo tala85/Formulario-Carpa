@@ -593,12 +593,38 @@ async function enviar(datos){
 
 async function buscarDuplicado(club, distrito){
   if (DEMO) return null;
-  try {
-    const url = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito);
-    const r = await fetch(url);
-    const res = await r.json();
-    return res.ok ? res.duplicado : null;
-  } catch(e){ return null; }
+  
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      if (script.parentNode) document.body.removeChild(script);
+      delete window[callbackName];
+      resolve(null); // Si falla, asumimos que no hay duplicado
+    }, 15000);
+    
+    const callbackName = 'cbdup_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    
+    window[callbackName] = function(response) {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) document.body.removeChild(script);
+      if (response && response.ok) {
+        resolve(response.duplicado);
+      } else {
+        resolve(null);
+      }
+    };
+    
+    const script = document.createElement('script');
+    script.src = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito) + '&callback=' + callbackName;
+    script.onerror = function() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) document.body.removeChild(script);
+      resolve(null);
+    };
+    
+    document.body.appendChild(script);
+  });
 }
 
 $('form').addEventListener('submit', async e => {
@@ -713,13 +739,34 @@ async function traer(folio){
     const d = JSON.parse(raw);
     return { ok:true, registro:{ folio: folio.toUpperCase(), club:d.club, distrito:d.distrito, acampantes:d.acampantes, carpas:d.carpas } };
   }
-  const ctrl = new AbortController(); const t = setTimeout(() => ctrl.abort(), 30000);
-  try{
-    const r = await fetch(CONFIG.API_URL + '?folio=' + encodeURIComponent(folio), { signal: ctrl.signal });
-    return await r.json();
-  }catch(e){
-    return { ok:false, error:'No pudimos conectar para buscar tu inscripción. Revisá tu conexión y recargá la página.' };
-  }finally{ clearTimeout(t); }
+  
+  return new Promise((resolve, reject) => {
+    const timeout = setTimeout(() => {
+      if (script.parentNode) document.body.removeChild(script);
+      delete window[callbackName];
+      reject(new Error('No pudimos conectar para buscar tu inscripción. Revisá tu conexión y recargá la página.'));
+    }, 30000);
+    
+    const callbackName = 'cb_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+    
+    window[callbackName] = function(response) {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) document.body.removeChild(script);
+      resolve(response);
+    };
+    
+    const script = document.createElement('script');
+    script.src = CONFIG.API_URL + '?folio=' + encodeURIComponent(folio) + '&callback=' + callbackName;
+    script.onerror = function() {
+      clearTimeout(timeout);
+      delete window[callbackName];
+      if (script.parentNode) document.body.removeChild(script);
+      reject(new Error('No pudimos conectar para buscar tu inscripción. Revisá tu conexión y recargá la página.'));
+    };
+    
+    document.body.appendChild(script);
+  });
 }
 
 /* ---- Interacciones en vivo ---- */
