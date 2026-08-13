@@ -659,37 +659,40 @@ $('form').addEventListener('submit', async e => {
   e.preventDefault();
   if (!validar()) return;
   
- // Verificar duplicado
-const datos = leerDatos();
-const dup = await buscarDuplicado(datos.club, datos.distrito);
-if (dup && !folioActual){
-  const ok = confirm(
-    '⚠️ Ya existe una inscripción para "' + dup.club + '" (Distrito: ' + dup.distrito + ')\n' +
-    'Folio existente: ' + dup.folio + '\n\n' +
-    '¿Querés EDITAR esa inscripción en vez de crear una nueva?\n\n' +
-    'OK = editar la existente\n' +
-    'Cancelar = no enviar nada (revisá los datos)'
-  );
-  if (ok){
-    folioActual = dup.folio;
-    datos.folio = dup.folio;
-    $('editFolioLbl').textContent = folioActual;
-    $('editNote').hidden = false;
-  } else {
-    // El usuario canceló: NO enviar
-    $('sendErr').innerHTML = '️ Envío cancelado. Ya existe una inscripción para <b>' + dup.club + '</b> con folio <b>' + dup.folio + '</b>. Si querés modificarla, usá el código de edición.';
-    $('sendErr').hidden = false;
-    $('sendErr').scrollIntoView({behavior:'smooth', block:'center'});
-    btn.disabled = false;
-    $('sendLabel').textContent = 'ENVIAR INSCRIPCIÓN';
-    return;  // ← ESTO ES LO QUE FALTABA: detiene la ejecución
-  }
-}
+  const btn = $('btnSend'); // <-- MOVIDO AQUÍ PARA EVITAR ERRORES
   
-  const btn = $('btnSend'); btn.disabled = true;
+  // Verificar duplicado
+  const datos = leerDatos();
+  const dup = await buscarDuplicado(datos.club, datos.distrito);
+  if (dup && !folioActual){
+    const ok = confirm(
+      '⚠️ Ya existe una inscripción para "' + dup.club + '" (Distrito: ' + dup.distrito + ')\n' +
+      'Folio existente: ' + dup.folio + '\n\n' +
+      '¿Querés EDITAR esa inscripción en vez de crear una nueva?\n\n' +
+      'OK = editar la existente\n' +
+      'Cancelar = no enviar nada (revisá los datos)'
+    );
+    if (ok){
+      folioActual = dup.folio;
+      datos.folio = dup.folio;
+      $('editFolioLbl').textContent = folioActual;
+      $('editNote').hidden = false;
+    } else {
+      // El usuario canceló: NO enviar
+      $('sendErr').innerHTML = '⚠️ Envío cancelado. Ya existe una inscripción para <b>' + dup.club + '</b> con folio <b>' + dup.folio + '</b>. Si querés modificarla, usá el código de edición.';
+      $('sendErr').hidden = false;
+      $('sendErr').scrollIntoView({behavior:'smooth', block:'center'});
+      btn.disabled = false; // <-- AHORA SÍ FUNCIONA
+      $('sendLabel').textContent = 'ENVIAR INSCRIPCIÓN';
+      return; // DETIENE LA EJECUCIÓN
+    }
+  }
+  
+  btn.disabled = true;
   $('sendLabel').innerHTML = '<span class="spinner"></span>' + (editando ? 'GUARDANDO CAMBIOS…' : 'ENVIANDO…');
   $('sendErr').hidden = true;
   if (folioActual) datos.folio = folioActual;
+  
   try{
     const res = await enviar(datos);
     if (!res.ok) throw new Error(res.error || 'No se pudo guardar.');
