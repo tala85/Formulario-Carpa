@@ -594,14 +594,65 @@ async function enviar(datos){
 async function buscarDuplicado(club, distrito){
   if (DEMO) return null;
   
-  try {
-    const url = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito);
-    const r = await fetch(url);
-    const res = await r.json();
-    return res.ok ? res.duplicado : null;
-  } catch(e) {
-    return null;
-  }
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      cleanup();
+      resolve(null);
+    }, 15000);
+    
+    const callbackName = 'cbdup_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = 'iframe_' + callbackName;
+    iframe.style.display = 'none';
+    
+    let resolved = false;
+    
+    function cleanup() {
+      clearTimeout(timeout);
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      delete window[callbackName];
+    }
+    
+    window[callbackName] = function(response) {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      if (response && response.ok) {
+        resolve(response.duplicado);
+      } else {
+        resolve(null);
+      }
+    };
+    
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = CONFIG.API_URL;
+    form.target = iframe.name;
+    form.style.display = 'none';
+    
+    const inputClub = document.createElement('input');
+    inputClub.type = 'hidden';
+    inputClub.name = 'club';
+    inputClub.value = club;
+    
+    const inputDistrito = document.createElement('input');
+    inputDistrito.type = 'hidden';
+    inputDistrito.name = 'distrito';
+    inputDistrito.value = distrito;
+    
+    const inputCallback = document.createElement('input');
+    inputCallback.type = 'hidden';
+    inputCallback.name = 'callback';
+    inputCallback.value = callbackName;
+    
+    form.appendChild(inputClub);
+    form.appendChild(inputDistrito);
+    form.appendChild(inputCallback);
+    document.body.appendChild(form);
+    document.body.appendChild(iframe);
+    
+    form.submit();
+  });
 }
 
 $('form').addEventListener('submit', async e => {
@@ -717,19 +768,65 @@ async function traer(folio){
     return { ok:true, registro:{ folio: folio.toUpperCase(), club:d.club, distrito:d.distrito, acampantes:d.acampantes, carpas:d.carpas } };
   }
   
-  const ctrl = new AbortController();
-  const timeout = setTimeout(() => ctrl.abort(), 30000);
-  
-  try {
-    const url = CONFIG.API_URL + '?folio=' + encodeURIComponent(folio);
-    const r = await fetch(url, { signal: ctrl.signal });
-    const res = await r.json();
-    clearTimeout(timeout);
-    return res;
-  } catch (e) {
-    clearTimeout(timeout);
-    return { ok:false, error:'No pudimos conectar para buscar tu inscripción. Revisá tu conexión y recargá la página.' };
-  }
+  return new Promise((resolve) => {
+    const timeout = setTimeout(() => {
+      cleanup();
+      resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión.' });
+    }, 30000);
+    
+    const callbackName = 'cb_' + Date.now();
+    const iframe = document.createElement('iframe');
+    iframe.name = 'iframe_' + callbackName;
+    iframe.style.display = 'none';
+    
+    let resolved = false;
+    
+    function cleanup() {
+      clearTimeout(timeout);
+      if (iframe.parentNode) iframe.parentNode.removeChild(iframe);
+      delete window[callbackName];
+    }
+    
+    window[callbackName] = function(response) {
+      if (resolved) return;
+      resolved = true;
+      cleanup();
+      resolve(response);
+    };
+    
+    // Creamos un formulario temporal que hace GET al script
+    const form = document.createElement('form');
+    form.method = 'GET';
+    form.action = CONFIG.API_URL;
+    form.target = iframe.name;
+    form.style.display = 'none';
+    
+    const inputFolio = document.createElement('input');
+    inputFolio.type = 'hidden';
+    inputFolio.name = 'folio';
+    inputFolio.value = folio;
+    
+    const inputCallback = document.createElement('input');
+    inputCallback.type = 'hidden';
+    inputCallback.name = 'callback';
+    inputCallback.value = callbackName;
+    
+    form.appendChild(inputFolio);
+    form.appendChild(inputCallback);
+    document.body.appendChild(form);
+    document.body.appendChild(iframe);
+    
+    form.submit();
+    
+    // Limpiar después de un tiempo
+    setTimeout(() => {
+      if (!resolved) {
+        resolved = true;
+        cleanup();
+        resolve({ ok:false, error:'Tiempo de espera agotado' });
+      }
+    }, 35000);
+  });
 }
 /* ---- Interacciones en vivo ---- */
 $('form').addEventListener('input', e => {
