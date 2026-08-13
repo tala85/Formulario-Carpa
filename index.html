@@ -511,6 +511,10 @@ function codigo(n){
   return s;
 }
 async function enviar(datos){
+    console.log('🚀 ENVIANDO DATOS:', datos);
+    console.log('📡 URL destino:', CONFIG.API_URL);
+  
+  
   if (DEMO){
     await new Promise(r => setTimeout(r, 800));
     const folio = datos.folio || 'DEMO-' + codigo(4);
