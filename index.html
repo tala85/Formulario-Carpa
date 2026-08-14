@@ -587,7 +587,7 @@ function nuevaFila(d){
       '<p class="err">Elegí la capacidad.</p></div>' +
     '<div class="t-cell"><label class="cell-label">Cantidad</label>' +
       '<input class="num-cant" type="number" min="1" step="1" inputmode="numeric" aria-label="Cantidad de carpas" ' +
-      'value="'+(Number(d.cantidad)>0?Number(d.cantidad):1)+'" placeholder="Ej.: 3"><p class="err">Número entero, mínimo 1.</p></div>' +
+      'value="'+(Number(d.cantidad)>0?Number(d.cantidad):'')+'" placeholder="Ej.: ¿Cuántas?"><p class="err">Número entero, mínimo 1.</p></div>' +
     '<button type="button" class="btn-remove" aria-label="Quitar esta fila" title="Quitar fila">✕</button>';
   
   row.querySelector('.btn-remove').addEventListener('click', () => {
