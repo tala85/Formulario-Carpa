@@ -34,155 +34,209 @@
   .wrap{width:min(100% - 32px,780px);margin:0 auto}
 
     /* ---- Header profesional con 3 logos ---- */
-  header{
-    position:relative;
-    display:grid;
-    grid-template-columns: 1fr 2fr 1fr;
-    align-items:center;
+  /* ---- Header Moderno y Profesional ---- */
+header{
+  position:relative;
+  padding:40px 30px 30px;
+  margin-bottom:20px;
+}
+
+.header-bg{
+  position:absolute;
+  top:0;
+  left:0;
+  right:0;
+  bottom:0;
+  background:linear-gradient(135deg, 
+    rgba(232,155,60,0.08) 0%, 
+    rgba(31,92,61,0.06) 50%, 
+    rgba(232,155,60,0.08) 100%);
+  border-radius:16px;
+  z-index:0;
+  backdrop-filter:blur(10px);
+}
+
+.header-content{
+  position:relative;
+  z-index:1;
+  display:grid;
+  grid-template-columns: auto 1fr auto;  /* ← CAMBIADO */
+  gap:10px;  /* ← Reducido de 30px a 20px */
+  align-items:center;
+  margin-bottom:20px;
+}
+
+.logo-box{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:15px;
+  background:rgba(250,245,233,0.05);
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+  border:2px solid rgba(250,245,233,0.1);
+  transition:transform .3s ease, box-shadow .3s ease;
+}
+
+.logo-box:hover{
+  transform:translateY(-5px);
+  box-shadow:0 10px 30px rgba(232,155,60,0.2);
+}
+
+.header-logo{
+  width:100px;
+  height:100px;
+  object-fit:contain;
+  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));
+  transition:all .3s ease;
+}
+
+.header-logo:hover{
+  transform:scale(1.05);
+  filter:drop-shadow(0 6px 12px rgba(232,155,60,0.3));
+}
+
+.header-main{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.header-center-content{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:15px;
+}
+
+.event-logo{
+  width:140px;
+  height:140px;
+  object-fit:contain;
+  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.2));
+  animation:floatLogo 3s ease-in-out infinite;
+}
+
+@keyframes floatLogo{
+  0%, 100%{ transform:translateY(0); }
+  50%{ transform:translateY(-8px); }
+}
+
+.header-info{
+  text-align:center;
+}
+
+.kicker{
+  color:var(--amber);
+  font-weight:800;
+  letter-spacing:.25em;
+  font-size:.75rem;
+  text-transform:uppercase;
+  margin:0;
+  text-shadow:0 2px 4px rgba(0,0,0,0.3);
+}
+
+h1{
+  font-family:'Alfa Slab One',serif;
+  font-weight:400;
+  text-transform:uppercase;
+  font-size:clamp(2rem,5vw,3.5rem);
+  line-height:1.1;
+  letter-spacing:1px;
+  color:var(--paper);
+  text-shadow:0 4px 8px rgba(0,0,0,0.4);
+  margin:8px 0 0 0;
+}
+
+.header-chips{
+  position:relative;
+  z-index:1;
+  display:flex;
+  justify-content:center;
+  gap:12px;
+  flex-wrap:wrap;
+  padding:15px;
+  background:rgba(250,245,233,0.03);
+  border-radius:12px;
+  backdrop-filter:blur(10px);
+  border:1px solid rgba(250,245,233,0.08);
+}
+
+.chip{
+  background:rgba(232,155,60,0.12);
+  border:1.5px solid rgba(232,155,60,0.3);
+  border-radius:999px;
+  padding:8px 16px;
+  font-size:.85rem;
+  font-weight:700;
+  color:var(--paper);
+  backdrop-filter:blur(10px);
+  transition:all .3s ease;
+  cursor:default;
+}
+
+.chip:hover{
+  background:rgba(232,155,60,0.25);
+  border-color:var(--amber);
+  transform:translateY(-2px);
+  box-shadow:0 4px 12px rgba(232,155,60,0.2);
+}
+
+/* ---- Responsive ---- */
+@media(max-width:900px){
+  .header-content{
+    grid-template-columns:1fr;
     gap:20px;
-    padding:30px 20px 25px;
-    overflow:hidden;
   }
-
-  .header-wave{
-    position:absolute;
-    bottom:0;
-    left:0;
-    width:100%;
-    height:60px;
-    pointer-events:none;
-    z-index:0;
+  .logo-left{ order:2; }
+  .header-main{ order:1; }
+  .logo-right{ order:3; }
+  .logo-box{
+    padding:10px;
   }
-
-  .logo-side{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    z-index:1;
-  }
-
-  .logo-left{ justify-content:flex-start; }
-  .logo-right{ justify-content:flex-end; }
-
   .header-logo{
-    width:90px;
-    height:90px;
-    object-fit:contain;
-    filter:drop-shadow(3px 4px 0 rgba(5,14,9,.4));
-    transition:transform .3s ease, filter .3s ease;
-    animation:logoIn .6s ease both;
+    width:80px;
+    height:80px;
   }
-
-  .header-logo:hover{
-    transform:scale(1.08) rotate(-2deg);
-    filter:drop-shadow(4px 5px 0 rgba(232,155,60,.5));
-  }
-
-  .logo-left .header-logo{ animation-delay:.1s; }
-  .logo-right .header-logo{ animation-delay:.3s; }
-
-  @keyframes logoIn{
-    from{ opacity:0; transform:translateY(-20px) scale(.8); }
-    to{ opacity:1; transform:translateY(0) scale(1); }
-  }
-
-  .logo-center{
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    gap:10px;
-    z-index:1;
-  }
-
-  .main-logo{
+  .event-logo{
     width:110px;
     height:110px;
-    animation:logoIn .6s ease both;
-    animation-delay:.2s;
   }
-
-  .header-text{
-    text-align:center;
-    width:100%;
-  }
-
-  .kicker{
-    color:var(--amber);
-    font-weight:700;
-    letter-spacing:.18em;
-    font-size:.8rem;
-    text-transform:uppercase;
-    margin-bottom:6px;
-  }
-
-  h1{
-    font-family:'Alfa Slab One',serif;
-    font-weight:400;
-    text-transform:uppercase;
-    font-size:clamp(1.8rem,5vw,2.8rem);
-    line-height:1.02;
-    letter-spacing:.5px;
-    text-shadow:3px 3px 0 rgba(5,14,9,.5);
-  }
-
-  .chips{
-    list-style:none;
-    display:flex;
-    flex-wrap:wrap;
+  h1{ font-size:clamp(1.8rem,8vw,2.5rem); }
+  .header-chips{
+    flex-direction:column;
+    align-items:center;
     gap:8px;
-    margin-top:14px;
-    justify-content:center;
   }
-
-  .chips li{
-    border:1.5px solid rgba(250,245,233,.4);
-    border-radius:999px;
-    padding:5px 13px;
-    font-size:.83rem;
-    color:rgba(250,245,233,.9);
-    background:rgba(5,14,9,.2);
-    backdrop-filter:blur(4px);
-    transition:transform .2s, background .2s;
+  .chip{
+    width:100%;
+    max-width:300px;
+    text-align:center;
   }
+}
 
-  .chips li:hover{
-    transform:translateY(-2px);
-    background:rgba(232,155,60,.15);
-    border-color:var(--amber);
+@media(max-width:480px){
+  header{
+    padding:30px 20px 25px;
   }
-
-  /* ---- Responsive ---- */
-  @media(max-width:768px){
-    header{
-      grid-template-columns:1fr;
-      grid-template-rows:auto auto auto;
-      gap:15px;
-      padding:25px 15px 20px;
-    }
-    .logo-left, .logo-right{
-      justify-content:center;
-    }
-    .logo-left{ order:2; }
-    .logo-center{ order:1; }
-    .logo-right{ order:3; }
-    .header-logo{
-      width:70px;
-      height:70px;
-    }
-    .main-logo{
-      width:90px;
-      height:90px;
-    }
-    h1{ font-size:clamp(1.5rem,7vw,2rem); }
-    .chips{ justify-content:center; }
+  .header-logo{
+    width:70px;
+    height:70px;
   }
-
-  @media(max-width:480px){
-    .header-logo{ width:60px; height:60px; }
-    .main-logo{ width:80px; height:80px; }
-    .chips li{ font-size:.75rem; padding:4px 10px; }
+  .event-logo{
+    width:90px;
+    height:90px;
   }
-
+  .kicker{
+    font-size:.7rem;
+    letter-spacing:.2em;
+  }
+  h1{ font-size:clamp(1.5rem,9vw,2rem); }
+  .chip{
+    font-size:.75rem;
+    padding:6px 12px;
+  }
+}
   .banner{border:2px solid;border-radius:12px;padding:12px 15px;font-weight:700;margin-bottom:18px;
           display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);color:var(--ink)}
   .banner.warn{border-color:var(--amber-deep);background:#f8ecd2;color:#6b4713}
@@ -306,37 +360,39 @@
 <body>
 <div class="wrap">
 
-  <header class="reveal">
-  <!-- Onda decorativa de fondo (SVG inline, 0 KB de carga) -->
-  <svg class="header-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" 
-          fill="rgba(232,155,60,0.08)"/>
-    <path d="M0,50 C360,20 720,70 1080,50 C1260,40 1380,45 1440,50 L1440,80 L0,80 Z" 
-          fill="rgba(232,155,60,0.05)"/>
-  </svg>
-
-  <!-- Logo izquierdo: Club de Aventureros -->
-  <div class="logo-side logo-left">
-    <img src="logo-aventureros.png" alt="Club de Aventureros" class="header-logo">
-  </div>
-
-  <!-- Centro: Logo evento + título -->
-  <div class="logo-center">
-    <img src="logo-evento.png" alt="Caminando con Jesús" class="header-logo main-logo">
-    <div class="header-text">
-      <p class="kicker" id="evento">Campamento · Registro oficial</p>
-      <h1 id="tituloForm">Ficha de inscripción</h1>
-      <ul class="chips">
-        <li>⛺ Un formulario por agrupación</li>
-        <li>✏️ Podés editar después de enviar</li>
-        <li>📱 Celular y PC · carga liviana</li>
-      </ul>
+<header class="reveal">
+  <!-- Fondo con gradiente sutil -->
+  <div class="header-bg"></div>
+  
+  <!-- Contenedor principal -->
+  <div class="header-content">
+    <!-- Logo izquierdo -->
+    <div class="logo-box logo-left">
+      <img src="logo-aventureros.png" alt="Club de Aventureros" class="header-logo">
+    </div>
+    
+    <!-- Centro: Logo evento + texto -->
+    <div class="header-main">
+      <div class="header-center-content">
+        <img src="logo-evento.png" alt="Caminando con Jesús" class="event-logo">
+        <div class="header-info">
+          <p class="kicker" id="evento">AVENTURI 2026 · REGISTRO OFICIAL</p>
+          <h1 id="tituloForm">FORMULARIO DE CARPAS</h1>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Logo derecho -->
+    <div class="logo-box logo-right">
+      <img src="logo-aan.png" alt="AAN" class="header-logo">
     </div>
   </div>
-
-  <!-- Logo derecho: AAN -->
-  <div class="logo-side logo-right">
-    <img src="logo-aan.png" alt="AAN" class="header-logo">
+  
+  <!-- Chips de características -->
+  <div class="header-chips">
+    <span class="chip">⛺ Un formulario por agrupación</span>
+    <span class="chip">✏️ Podés editar después de enviar</span>
+    <span class="chip">📱 Celular y PC · carga liviana</span>
   </div>
 </header>
 
