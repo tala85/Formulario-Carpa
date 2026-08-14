@@ -988,7 +988,7 @@ $('btnVolverInicio').addEventListener('click', () => {
 $('btnBuscar').addEventListener('click', async () => {
   const folio = $('inputFolio').value.trim().toUpperCase();
   if (!folio) { $('loadMsg').textContent = 'Escribí un código.'; return; }
-  $('loadMsg').textContent = 'Buscando…';
+  $('loadMsg').textContent = 'Buscando… (si tarda, es porque estamos despertando el servidor)';
   const res = await traer(folio);
   if (res.ok) {
     folioActual = res.registro.folio;
