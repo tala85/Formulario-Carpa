@@ -33,15 +33,155 @@
   :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
   .wrap{width:min(100% - 32px,780px);margin:0 auto}
 
-  header{display:flex;gap:24px;align-items:center;padding:44px 0 28px;flex-wrap:wrap}
-  .patch{width:118px;height:118px;flex:none;filter:drop-shadow(4px 5px 0 rgba(5,14,9,.5))}
-  img.patch{object-fit:contain}
-  .kicker{color:var(--amber);font-weight:700;letter-spacing:.18em;font-size:.8rem;text-transform:uppercase;margin-bottom:6px}
-  h1{font-family:'Alfa Slab One',serif;font-weight:400;text-transform:uppercase;
-     font-size:clamp(2rem,6.5vw,3.3rem);line-height:1.02;letter-spacing:.5px;text-shadow:3px 3px 0 rgba(5,14,9,.5)}
-  .chips{list-style:none;display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
-  .chips li{border:1.5px solid rgba(250,245,233,.4);border-radius:999px;padding:5px 13px;
-            font-size:.83rem;color:rgba(250,245,233,.9)}
+    /* ---- Header profesional con 3 logos ---- */
+  header{
+    position:relative;
+    display:grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items:center;
+    gap:20px;
+    padding:30px 20px 25px;
+    overflow:hidden;
+  }
+
+  .header-wave{
+    position:absolute;
+    bottom:0;
+    left:0;
+    width:100%;
+    height:60px;
+    pointer-events:none;
+    z-index:0;
+  }
+
+  .logo-side{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    z-index:1;
+  }
+
+  .logo-left{ justify-content:flex-start; }
+  .logo-right{ justify-content:flex-end; }
+
+  .header-logo{
+    width:90px;
+    height:90px;
+    object-fit:contain;
+    filter:drop-shadow(3px 4px 0 rgba(5,14,9,.4));
+    transition:transform .3s ease, filter .3s ease;
+    animation:logoIn .6s ease both;
+  }
+
+  .header-logo:hover{
+    transform:scale(1.08) rotate(-2deg);
+    filter:drop-shadow(4px 5px 0 rgba(232,155,60,.5));
+  }
+
+  .logo-left .header-logo{ animation-delay:.1s; }
+  .logo-right .header-logo{ animation-delay:.3s; }
+
+  @keyframes logoIn{
+    from{ opacity:0; transform:translateY(-20px) scale(.8); }
+    to{ opacity:1; transform:translateY(0) scale(1); }
+  }
+
+  .logo-center{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:10px;
+    z-index:1;
+  }
+
+  .main-logo{
+    width:110px;
+    height:110px;
+    animation:logoIn .6s ease both;
+    animation-delay:.2s;
+  }
+
+  .header-text{
+    text-align:center;
+    width:100%;
+  }
+
+  .kicker{
+    color:var(--amber);
+    font-weight:700;
+    letter-spacing:.18em;
+    font-size:.8rem;
+    text-transform:uppercase;
+    margin-bottom:6px;
+  }
+
+  h1{
+    font-family:'Alfa Slab One',serif;
+    font-weight:400;
+    text-transform:uppercase;
+    font-size:clamp(1.8rem,5vw,2.8rem);
+    line-height:1.02;
+    letter-spacing:.5px;
+    text-shadow:3px 3px 0 rgba(5,14,9,.5);
+  }
+
+  .chips{
+    list-style:none;
+    display:flex;
+    flex-wrap:wrap;
+    gap:8px;
+    margin-top:14px;
+    justify-content:center;
+  }
+
+  .chips li{
+    border:1.5px solid rgba(250,245,233,.4);
+    border-radius:999px;
+    padding:5px 13px;
+    font-size:.83rem;
+    color:rgba(250,245,233,.9);
+    background:rgba(5,14,9,.2);
+    backdrop-filter:blur(4px);
+    transition:transform .2s, background .2s;
+  }
+
+  .chips li:hover{
+    transform:translateY(-2px);
+    background:rgba(232,155,60,.15);
+    border-color:var(--amber);
+  }
+
+  /* ---- Responsive ---- */
+  @media(max-width:768px){
+    header{
+      grid-template-columns:1fr;
+      grid-template-rows:auto auto auto;
+      gap:15px;
+      padding:25px 15px 20px;
+    }
+    .logo-left, .logo-right{
+      justify-content:center;
+    }
+    .logo-left{ order:2; }
+    .logo-center{ order:1; }
+    .logo-right{ order:3; }
+    .header-logo{
+      width:70px;
+      height:70px;
+    }
+    .main-logo{
+      width:90px;
+      height:90px;
+    }
+    h1{ font-size:clamp(1.5rem,7vw,2rem); }
+    .chips{ justify-content:center; }
+  }
+
+  @media(max-width:480px){
+    .header-logo{ width:60px; height:60px; }
+    .main-logo{ width:80px; height:80px; }
+    .chips li{ font-size:.75rem; padding:4px 10px; }
+  }
 
   .banner{border:2px solid;border-radius:12px;padding:12px 15px;font-weight:700;margin-bottom:18px;
           display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);color:var(--ink)}
@@ -167,19 +307,23 @@
 <div class="wrap">
 
   <header class="reveal">
-    <img id="logoEvento" class="patch" alt="Emblema del evento" hidden>
-    <svg id="emblemSvg" class="patch" viewBox="0 0 120 120" role="img" aria-label="Emblema del campamento">
-      <circle cx="60" cy="60" r="57" fill="#153424"/>
-      <circle cx="60" cy="60" r="57" fill="none" stroke="#e89b3c" stroke-width="2.5"/>
-      <circle cx="60" cy="60" r="48" fill="none" stroke="#e89b3c" stroke-width="1.4" stroke-dasharray="3 5"/>
-      <circle cx="85" cy="36" r="6" fill="#faf5e9" opacity=".9"/>
-      <path d="M60 30 L30 84 L90 84 Z" fill="#e89b3c"/>
-      <path d="M60 52 L47 84 L73 84 Z" fill="#153424"/>
-      <line x1="60" y1="30" x2="60" y2="17" stroke="#e89b3c" stroke-width="2.5"/>
-      <path d="M60 17 l14 4 -14 4 Z" fill="#c2452d"/>
-      <circle cx="36" cy="34" r="2" fill="#faf5e9"/><circle cx="46" cy="26" r="1.6" fill="#faf5e9"/>
-    </svg>
-    <div>
+  <!-- Onda decorativa de fondo (SVG inline, 0 KB de carga) -->
+  <svg class="header-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0,40 C360,80 720,0 1080,40 C1260,60 1380,50 1440,40 L1440,80 L0,80 Z" 
+          fill="rgba(232,155,60,0.08)"/>
+    <path d="M0,50 C360,20 720,70 1080,50 C1260,40 1380,45 1440,50 L1440,80 L0,80 Z" 
+          fill="rgba(232,155,60,0.05)"/>
+  </svg>
+
+  <!-- Logo izquierdo: Club de Aventureros -->
+  <div class="logo-side logo-left">
+    <img src="logo-aventureros.png" alt="Club de Aventureros" class="header-logo">
+  </div>
+
+  <!-- Centro: Logo evento + título -->
+  <div class="logo-center">
+    <img src="logo-evento.png" alt="Caminando con Jesús" class="header-logo main-logo">
+    <div class="header-text">
       <p class="kicker" id="evento">Campamento · Registro oficial</p>
       <h1 id="tituloForm">Ficha de inscripción</h1>
       <ul class="chips">
@@ -188,7 +332,13 @@
         <li>📱 Celular y PC · carga liviana</li>
       </ul>
     </div>
-  </header>
+  </div>
+
+  <!-- Logo derecho: AAN -->
+  <div class="logo-side logo-right">
+    <img src="logo-aan.png" alt="AAN" class="header-logo">
+  </div>
+</header>
 
   <div id="demoNote" class="banner warn" hidden>🧪 <span><b>Modo prueba:</b> todavía no conectaste la planilla de Google. Pegá tu URL en <code>CONFIG.API_URL</code> dentro del archivo.</span></div>
  
@@ -323,8 +473,8 @@
 <script>
 /* ================== CONFIGURACIÓN (editá acá) ================== */
 const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbzQ6hn8LWnFMAHqxm7mh6H1FFcHWJ4uZ-AOlgTQxQP_2IC-MQHxrRmcYIE6TDzQ3Zjvzg/exec',   // ← tu URL de Apps Script que termina en /exec
-  LOGO: 'logo.png',                // ← 'logo.png' (archivo en la misma carpeta) o una URL https://... ; con '' queda el emblema de carpa
+  API_URL: 'https://script.google.com/macros/s/AKfycbzQ6hn8LWnFMAHqxm7mh6H1FFcHWJ4uZ-AOlgTQxQP_2IC-MQHxrRmcYIE6TDzQ3Zjvzg/exec',
+  LOGO: 'logo-evento.png',  // ← Cambiado
   TITULO: 'Formulario de carpas',
   NOMBRE_EVENTO: 'Aventuri 2026',
   ORGANIZACION: 'Zona Este, AAN'
@@ -345,11 +495,7 @@ document.title = 'Inscripción — ' + CONFIG.NOMBRE_EVENTO;
 $('evento').textContent = CONFIG.NOMBRE_EVENTO + ' · Registro oficial';
 $('tituloForm').textContent = CONFIG.TITULO;
 $('orgLine').textContent = 'Organiza: ' + CONFIG.ORGANIZACION;
-if (CONFIG.LOGO){
-  $('logoEvento').src = CONFIG.LOGO;
-  $('logoEvento').hidden = false;
-  $('emblemSvg').style.display = 'none';
-}
+
 if (DEMO) $('demoNote').hidden = false;
 
 /* ---- Filas de carpas ---- */
