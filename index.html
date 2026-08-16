@@ -882,6 +882,114 @@
           transform: scale(1.03);
         }
       }
+
+      /* ---- Modal profesional ---- */
+      .modal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(5, 14, 9, 0.7);
+        backdrop-filter: blur(4px);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 100;
+        padding: 20px;
+        animation: fadeIn 0.25s ease;
+      }
+      .modal-overlay[hidden] {
+        display: none;
+      }
+      .modal-box {
+        background: var(--paper);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 16px;
+        box-shadow: 8px 8px 0 rgba(5, 14, 9, 0.45);
+        max-width: 420px;
+        width: 100%;
+        padding: 28px 24px;
+        text-align: center;
+        animation: modalIn 0.3s ease;
+      }
+      @keyframes modalIn {
+        from {
+          opacity: 0;
+          transform: translateY(20px) scale(0.95);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+      .modal-icon {
+        font-size: 2.5rem;
+        margin-bottom: 8px;
+      }
+      .modal-title {
+        font-family: "Alfa Slab One", serif;
+        color: var(--amber-deep);
+        font-size: 1.3rem;
+        letter-spacing: 1px;
+        margin-bottom: 10px;
+      }
+      .modal-text {
+        font-size: 0.92rem;
+        color: var(--ink-soft);
+        line-height: 1.5;
+        margin-bottom: 16px;
+      }
+      .modal-datos {
+        background: var(--paper2);
+        border: 1.5px dashed var(--ink-soft);
+        border-radius: 10px;
+        padding: 12px 16px;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 20px;
+        text-align: left;
+        font-size: 0.92rem;
+      }
+      .modal-dato b {
+        color: var(--amber-deep);
+      }
+      .modal-botones {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .modal-btn {
+        font: inherit;
+        font-weight: 700;
+        padding: 12px;
+        border-radius: 10px;
+        cursor: pointer;
+        border: 2px solid var(--ink);
+        transition: 0.15s;
+      }
+      .modal-btn.cancelar {
+        background: #fff;
+        color: var(--ink);
+      }
+      .modal-btn.cancelar:hover {
+        background: var(--paper2);
+      }
+      .modal-btn.aceptar {
+        background: var(--amber);
+        color: var(--ink);
+      }
+      .modal-btn.aceptar:hover {
+        background: var(--amber-deep);
+        color: #fff;
+      }
     </style>
   </head>
   <body>
@@ -1469,7 +1577,30 @@
         return v > 0 && Math.floor(v) === v;
       }
       const MARGEN_PLAZAS = 0.15; // 15% de plazas extra permitidas sin advertencia (0 = advertir siempre)
-      function validar() {
+      // Modal profesional que reemplaza al confirm() nativo
+      function confirmarPlazasExtra(acampantes, plazas, extra) {
+        return new Promise((resolve) => {
+          const overlay = document.getElementById("modalPlazas");
+          document.getElementById("mAcampantes").textContent = acampantes;
+          document.getElementById("mPlazas").textContent = plazas;
+          document.getElementById("mExtra").textContent = extra;
+          overlay.hidden = false;
+
+          const btnOk = document.getElementById("modalAceptar");
+          const btnNo = document.getElementById("modalCancelar");
+
+          const cerrar = (resultado) => {
+            overlay.hidden = true;
+            btnOk.onclick = null;
+            btnNo.onclick = null;
+            resolve(resultado);
+          };
+
+          btnOk.onclick = () => cerrar(true);
+          btnNo.onclick = () => cerrar(false);
+        });
+      }
+      async function validar() {
         let malo = null;
         const marcar = (cont, cond) => {
           cont.classList.toggle("invalid", cond);
@@ -1549,29 +1680,13 @@
         }
 
         // CASO 2: Muchas plazas de más → advertencia
+                // CASO 2: Muchas plazas de más → modal profesional
         const maxPermitido = Math.ceil(datos.acampantes * (1 + MARGEN_PLAZAS));
         if (datos.acampantes > 0 && plazas > maxPermitido) {
           const extra = plazas - datos.acampantes;
-          const aviso =
-            "⚠️ ATENCIÓN: LA CANTIDAD DE PLAZAS SUPERA LA CANTIDAD DE ACAMPANTES.\n\n" +
-            "Podría ser que no quepan todas las carpas en el predio designado, ya que la referencia es la cantidad de acampantes y el margen de extra es muy poco.\n\n" +
-            "👥 Acampantes: " +
-            datos.acampantes +
-            "\n" +
-            "🛏️ Plazas cargadas: " +
-            plazas +
-            "\n" +
-            "➕ Extra: " +
-            extra +
-            " plazas\n\n" +
-            "Aceptar = Enviar igual\n" +
-            "Cancelar = Ajustar las carpas";
-
-          if (!confirm(aviso)) {
-            $("rEstado").scrollIntoView({
-              behavior: "smooth",
-              block: "center",
-            });
+          const okEnvio = await confirmarPlazasExtra(datos.acampantes, plazas, extra);
+          if (!okEnvio) {
+            $("rEstado").scrollIntoView({ behavior: "smooth", block: "center" });
             return false;
           }
         }
@@ -1705,7 +1820,7 @@
       /* ---- Envío del formulario ---- */
       $("form").addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (!validar()) return;
+       if (!await validar()) return;
 
         const btn = $("btnSend");
 
@@ -2083,5 +2198,34 @@
         actualizarResumen();
       })();
     </script>
+
+    <!-- Modal profesional de plazas de más -->
+    <div id="modalPlazas" class="modal-overlay" hidden>
+      <div class="modal-box">
+        <div class="modal-icon">⚠️</div>
+        <h3 class="modal-title">¡ATENCIÓN!</h3>
+        <p class="modal-text">
+          La cantidad de plazas supera la cantidad de acampantes. Podría ser que
+          <b>no quepan todas las carpas</b> en el predio designado, ya que la
+          referencia es la cantidad de acampantes y el margen de extra es muy
+          poco.
+        </p>
+        <div class="modal-datos">
+          <div class="modal-dato">👥 Acampantes: <b id="mAcampantes">0</b></div>
+          <div class="modal-dato">
+            🛏️ Plazas cargadas: <b id="mPlazas">0</b>
+          </div>
+          <div class="modal-dato">➕ Extra: <b id="mExtra">0</b> plazas</div>
+        </div>
+        <div class="modal-botones">
+          <button type="button" id="modalCancelar" class="modal-btn cancelar">
+            Ajustar carpas
+          </button>
+          <button type="button" id="modalAceptar" class="modal-btn aceptar">
+            Enviar igual
+          </button>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
