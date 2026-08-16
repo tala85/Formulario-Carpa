@@ -869,6 +869,19 @@
       #demoNote[hidden] {
         display: none !important;
       }
+      /* Cartel de error que pulsa para llamar la atención */
+      #plazasErr {
+        animation: pulso 0.6s ease 2;
+      }
+      @keyframes pulso {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        50% {
+          transform: scale(1.03);
+        }
+      }
     </style>
   </head>
   <body>
@@ -1504,23 +1517,24 @@
         const faltan = datos.acampantes - plazas;
         const plazasErr = document.getElementById("plazasErr");
 
-        // CASO 1: Faltan plazas → BLOQUEAR envío
+        // CASO 1: Faltan plazas → BLOQUEAR envío y mostrar cartel
         if (datos.acampantes > 0 && faltan > 0) {
           if (plazasErr) {
             plazasErr.innerHTML =
-              "⚠️ Faltan <b>" +
+              "🚫 <b>NO PODÉS ENVIAR TODAVÍA</b> porque faltan <b>" +
               faltan +
-              " plazas</b> por cubrir. Agregá más carpas antes de enviar.";
+              " plazas</b> por cubrir.<br>Agregá más carpas para completar las " +
+              datos.acampantes +
+              " plazas de tus acampantes.";
             plazasErr.hidden = false;
           }
-          $("rEstado").scrollIntoView({ behavior: "smooth", block: "center" });
+
+          // Llevar la vista al cartel para que sea imposible no verlo
           setTimeout(() => {
-            $("btnAdd").focus();
-            $("btnAdd").scrollIntoView({
-              behavior: "smooth",
-              block: "nearest",
-            });
-          }, 400);
+            if (plazasErr)
+              plazasErr.scrollIntoView({ behavior: "smooth", block: "center" });
+          }, 100);
+
           return false;
         }
 
