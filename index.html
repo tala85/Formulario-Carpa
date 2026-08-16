@@ -1135,6 +1135,12 @@
           <button type="button" class="btn-add" id="btnAdd">
             ＋ Agregar otra carpa
           </button>
+          <div
+            id="plazasErr"
+            class="banner err"
+            hidden
+            style="margin-top: 10px"
+          ></div>
           <div class="resumen" role="status" aria-live="polite">
             <span>⛺ <b id="rCarpas">0</b> carpas</span>
             <span>🛏️ <b id="rPlazas">0</b> plazas</span>
@@ -1410,19 +1416,26 @@
         );
         setNum($("rCarpas"), carpas);
         setNum($("rPlazas"), plazas);
+
         const est = $("rEstado");
         if (!d.acampantes) {
-          est.textContent = "Completá acampantes";
+          est.textContent = "Completá los datos";
           est.className = "estado neutro";
-        } else if (!plazas) {
-          est.textContent = "Agregá tus carpas";
-          est.className = "estado neutro";
-        } else if (plazas >= d.acampantes) {
-          est.textContent = "✔ Plazas suficientes";
-          est.className = "estado ok";
-        } else {
+        } else if (plazas < d.acampantes) {
           est.textContent = "⚠ Faltan " + (d.acampantes - plazas) + " plazas";
           est.className = "estado warn";
+        } else if (plazas > Math.ceil(d.acampantes * (1 + MARGEN_PLAZAS))) {
+          est.textContent = "⚠ " + (plazas - d.acampantes) + " plazas de más";
+          est.className = "estado warn";
+        } else {
+          est.textContent = "✔ Plazas suficientes";
+          est.className = "estado ok";
+        }
+
+        // Ocultar el banner de error cuando ya cubrió las plazas
+        const plazasErr = document.getElementById("plazasErr");
+        if (plazasErr && plazas >= d.acampantes) {
+          plazasErr.hidden = true;
         }
       }
 
@@ -1442,6 +1455,8 @@
         const v = Number(el.value);
         return v > 0 && Math.floor(v) === v;
       }
+      const MARGEN_PLAZAS = 0.15; // 15% de plazas extra permitidas sin advertencia (0 = advertir siempre)
+
       function validar() {
         let malo = null;
         const marcar = (cont, cond) => {
@@ -1472,7 +1487,13 @@
         $("okErr").classList.toggle("show", !ok);
         if (!ok && !malo) malo = $("ok");
 
-        // NUEVA VALIDACIÓN: Verificar si hay suficientes plazas
+        if (malo) {
+          malo.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => malo.focus({ preventScroll: true }), 350);
+          return false;
+        }
+
+        // ===== VALIDACIÓN DE PLAZAS =====
         const datos = leerDatos();
         const plazas = datos.carpas.reduce(
           (s, c) =>
@@ -1480,47 +1501,60 @@
             (c.cantidad > 0 && c.capacidad > 0 ? c.cantidad * c.capacidad : 0),
           0,
         );
+        const faltan = datos.acampantes - plazas;
+        const plazasErr = document.getElementById("plazasErr");
 
-        if (datos.acampantes > 0 && plazas < datos.acampantes) {
-          const faltan = datos.acampantes - plazas;
-          const mensaje =
-            "⚠️ FALTAN PLAZAS POR CUBRIR\n\n" +
-            "Acampantes: " +
+        // CASO 1: Faltan plazas → BLOQUEAR envío
+        if (datos.acampantes > 0 && faltan > 0) {
+          if (plazasErr) {
+            plazasErr.innerHTML =
+              "⚠️ Faltan <b>" +
+              faltan +
+              " plazas</b> por cubrir. Agregá más carpas antes de enviar.";
+            plazasErr.hidden = false;
+          }
+          $("rEstado").scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => {
+            $("btnAdd").focus();
+            $("btnAdd").scrollIntoView({
+              behavior: "smooth",
+              block: "nearest",
+            });
+          }, 400);
+          return false;
+        }
+
+        // CASO 2: Muchas plazas de más → ADVERTENCIA con confirmación
+        const maxPermitido = Math.ceil(datos.acampantes * (1 + MARGEN_PLAZAS));
+        if (datos.acampantes > 0 && plazas > maxPermitido) {
+          const extra = plazas - datos.acampantes;
+          const aviso =
+            "⚠️ ATENCIÓN: LA CANTIDAD DE PLAZAS SUPERA LA CANTIDAD DE ACAMPANTES.\n\n" +
+            "Podría ser que no quepan todas las carpas en el predio designado, ya que la referencia es la cantidad de acampantes y el margen de extra es muy poco.\n\n" +
+            "👥 Acampantes: " +
             datos.acampantes +
             "\n" +
-            "Plazas en carpas: " +
+            "🛏️ Plazas cargadas: " +
             plazas +
             "\n" +
-            "Faltan: " +
-            faltan +
+            "➕ Extra: " +
+            extra +
             " plazas\n\n" +
-            "¿Querés enviar igual o preferís agregar más carpas?\n\n" +
-            "Aceptar = Enviar con plazas faltantes\n" +
-            "Cancelar = Agregar más carpas";
+            "Aceptar = Enviar igual\n" +
+            "Cancelar = Ajustar las carpas";
 
-          if (!confirm(mensaje)) {
-            // El usuario canceló: enfocar el resumen para que vea el problema
+          if (!confirm(aviso)) {
             $("rEstado").scrollIntoView({
               behavior: "smooth",
               block: "center",
             });
-            setTimeout(() => {
-              $("btnAdd").focus();
-              $("btnAdd").scrollIntoView({
-                behavior: "smooth",
-                block: "nearest",
-              });
-            }, 300);
             return false;
           }
         }
 
-        if (malo) {
-          malo.scrollIntoView({ behavior: "smooth", block: "center" });
-          setTimeout(() => malo.focus({ preventScroll: true }), 350);
-        }
-
-        return !malo;
+        // Si llegó acá, todo bien: ocultar banner
+        if (plazasErr) plazasErr.hidden = true;
+        return true;
       }
 
       /* ---- Envío ---- */
