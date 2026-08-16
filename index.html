@@ -1518,6 +1518,9 @@
 
         // CASO 1: Faltan plazas → BLOQUEAR y mostrar cartel
         if (datos.acampantes > 0 && faltan > 0) {
+          console.log("🚫 FALTAN PLAZAS:", faltan); // Para debuggear
+          console.log("plazasErr existe?", !!plazasErr); // Para debuggear
+
           if (plazasErr) {
             plazasErr.innerHTML =
               "🚫 <b>NO PODÉS ENVIAR TODAVÍA</b> porque faltan <b>" +
@@ -1525,8 +1528,19 @@
               " plazas</b> por cubrir.<br>Agregá más carpas para completar las " +
               datos.acampantes +
               " plazas de tus acampantes.";
+
+            // Forzar visibilidad de todas las formas posibles
             plazasErr.hidden = false;
+            plazasErr.removeAttribute("hidden");
+            plazasErr.style.display = "block";
+            plazasErr.style.visibility = "visible";
+            plazasErr.style.opacity = "1";
+
+            console.log("Cartel mostrado:", plazasErr.outerHTML);
+          } else {
+            console.error("❌ NO SE ENCONTRÓ el div #plazasErr en el HTML");
           }
+
           setTimeout(() => {
             if (plazasErr)
               plazasErr.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1562,7 +1576,10 @@
           }
         }
 
-        if (plazasErr) plazasErr.hidden = true;
+        if (plazasErr) {
+          plazasErr.hidden = true;
+          plazasErr.style.display = "none";
+        }
         return true;
       }
 
