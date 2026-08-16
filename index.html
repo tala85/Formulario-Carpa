@@ -1448,9 +1448,11 @@
           cont.classList.toggle("invalid", cond);
           if (cond && !malo) malo = cont.querySelector("input,select");
         };
+
         marcar($("fClub"), !$("club").value.trim());
         marcar($("fDist"), !$("distrito").value.trim());
         marcar($("fAc"), !enteroValido($("acampantes")));
+
         [...rowsEl.children].forEach((r) => {
           [...r.querySelectorAll(".t-cell")].forEach((c) => {
             let bad = false;
@@ -1465,13 +1467,59 @@
             if (bad && !malo) malo = c.querySelector("select,input");
           });
         });
+
         const ok = $("ok").checked;
         $("okErr").classList.toggle("show", !ok);
         if (!ok && !malo) malo = $("ok");
+
+        // NUEVA VALIDACIÓN: Verificar si hay suficientes plazas
+        const datos = leerDatos();
+        const plazas = datos.carpas.reduce(
+          (s, c) =>
+            s +
+            (c.cantidad > 0 && c.capacidad > 0 ? c.cantidad * c.capacidad : 0),
+          0,
+        );
+
+        if (datos.acampantes > 0 && plazas < datos.acampantes) {
+          const faltan = datos.acampantes - plazas;
+          const mensaje =
+            "⚠️ FALTAN PLAZAS POR CUBRIR\n\n" +
+            "Acampantes: " +
+            datos.acampantes +
+            "\n" +
+            "Plazas en carpas: " +
+            plazas +
+            "\n" +
+            "Faltan: " +
+            faltan +
+            " plazas\n\n" +
+            "¿Querés enviar igual o preferís agregar más carpas?\n\n" +
+            "OK = Enviar sin plazas suficientes\n" +
+            "Cancelar = Agregar más carpas";
+
+          if (!confirm(mensaje)) {
+            // El usuario canceló: enfocar el resumen para que vea el problema
+            $("rEstado").scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            setTimeout(() => {
+              $("btnAdd").focus();
+              $("btnAdd").scrollIntoView({
+                behavior: "smooth",
+                block: "nearest",
+              });
+            }, 300);
+            return false;
+          }
+        }
+
         if (malo) {
           malo.scrollIntoView({ behavior: "smooth", block: "center" });
           setTimeout(() => malo.focus({ preventScroll: true }), 350);
         }
+
         return !malo;
       }
 
