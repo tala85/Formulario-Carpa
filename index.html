@@ -1469,7 +1469,6 @@
         return v > 0 && Math.floor(v) === v;
       }
       const MARGEN_PLAZAS = 0.15; // 15% de plazas extra permitidas sin advertencia (0 = advertir siempre)
-
       function validar() {
         let malo = null;
         const marcar = (cont, cond) => {
@@ -1517,7 +1516,7 @@
         const faltan = datos.acampantes - plazas;
         const plazasErr = document.getElementById("plazasErr");
 
-        // CASO 1: Faltan plazas → BLOQUEAR envío y mostrar cartel
+        // CASO 1: Faltan plazas → BLOQUEAR y mostrar cartel
         if (datos.acampantes > 0 && faltan > 0) {
           if (plazasErr) {
             plazasErr.innerHTML =
@@ -1528,17 +1527,14 @@
               " plazas de tus acampantes.";
             plazasErr.hidden = false;
           }
-
-          // Llevar la vista al cartel para que sea imposible no verlo
           setTimeout(() => {
             if (plazasErr)
               plazasErr.scrollIntoView({ behavior: "smooth", block: "center" });
           }, 100);
-
           return false;
         }
 
-        // CASO 2: Muchas plazas de más → ADVERTENCIA con confirmación
+        // CASO 2: Muchas plazas de más → advertencia
         const maxPermitido = Math.ceil(datos.acampantes * (1 + MARGEN_PLAZAS));
         if (datos.acampantes > 0 && plazas > maxPermitido) {
           const extra = plazas - datos.acampantes;
@@ -1554,7 +1550,7 @@
             "➕ Extra: " +
             extra +
             " plazas\n\n" +
-            "Aceptar = Enviar igual\n" +
+            "OK = Enviar igual\n" +
             "Cancelar = Ajustar las carpas";
 
           if (!confirm(aviso)) {
@@ -1566,7 +1562,6 @@
           }
         }
 
-        // Si llegó acá, todo bien: ocultar banner
         if (plazasErr) plazasErr.hidden = true;
         return true;
       }
