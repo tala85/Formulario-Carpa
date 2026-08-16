@@ -1,1065 +1,1979 @@
 <!doctype html>
 <html lang="es">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ficha de inscripción — Campamento</title>
-<meta name="description" content="Inscripción de campamento: datos del club y carpas. Podés editar tu inscripción después de enviar.">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9B%BA%3C/text%3E%3C/svg%3E">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
-<style>
-  :root{
-    --bg:#0e2117; --bg2:#143226; --paper:#faf5e9; --paper2:#efe6d0;
-    --ink:#1b2a20; --ink-soft:#4c5c50;
-    --amber:#e89b3c; --amber-deep:#c07a1d;
-    --green:#1f5c3d; --green-deep:#164730;
-    --danger:#c2452d; --ok:#2e7d4f; --line:#2a4434;
-    --shadow:6px 6px 0 rgba(5,14,9,.45);
-  }
-  *{box-sizing:border-box;margin:0;padding:0}
-  html{scroll-behavior:smooth}
-  body{
-    font-family:'Atkinson Hyperlegible',system-ui,Segoe UI,sans-serif;
-    font-size:17px;color:var(--paper);background-color:var(--bg);
-    background-image:
-      radial-gradient(ellipse 90% 55% at 50% -10%, rgba(232,155,60,.14), transparent 60%),
-      repeating-radial-gradient(circle at 12% 18%, transparent 0 46px, rgba(255,255,255,.045) 46px 47.5px),
-      repeating-radial-gradient(circle at 88% 78%, transparent 0 62px, rgba(255,255,255,.04) 62px 63.5px);
-    min-height:100vh;
-  }
-  ::selection{background:var(--amber);color:var(--ink)}
-  :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
-  .wrap{width:min(100% - 32px,780px);margin:0 auto}
-
-    /* ---- Header profesional con 3 logos ---- */
-  /* ---- Header Moderno y Profesional ---- */
-/* ---- Header Moderno y Profesional ---- */
-header{
-  position:relative;
-  padding:30px 20px 25px;
-  margin-bottom:20px;
-}
-
-.header-bg{
-  position:absolute;
-  top:0;
-  left:0;
-  right:0;
-  bottom:0;
-  background:linear-gradient(135deg, 
-    rgba(232,155,60,0.08) 0%, 
-    rgba(31,92,61,0.06) 50%, 
-    rgba(232,155,60,0.08) 100%);
-  border-radius:16px;
-  z-index:0;
-  backdrop-filter:blur(10px);
-}
-
-/* Fila de logos: 3 logos siempre en línea */
-.logos-row{
-  position:relative;
-  z-index:1;
-  display:grid;
-  grid-template-columns: 1fr auto 1fr;
-  align-items:center;
-  justify-items:center;
-  gap:10px;
-  margin-bottom:15px;
-}
-
-.logo-box{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  padding:12px;
-  background:rgba(250,245,233,0.05);
-  border-radius:12px;
-  backdrop-filter:blur(10px);
-  border:2px solid rgba(250,245,233,0.1);
-  transition:transform .3s ease, box-shadow .3s ease;
-}
-
-.logo-box:hover{
-  transform:translateY(-5px);
-  box-shadow:0 10px 30px rgba(232,155,60,0.2);
-}
-
-.header-logo{
-  width:90px;
-  height:90px;
-  object-fit:contain;
-  filter:drop-shadow(0 4px 8px rgba(0,0,0,0.15));
-  transition:all .3s ease;
-}
-
-.header-logo:hover{
-  transform:scale(1.05);
-  filter:drop-shadow(0 6px 12px rgba(232,155,60,0.3));
-}
-
-.logo-center-box{
-  display:flex;
-  justify-content:center;
-  align-items:center;
-}
-
-.event-logo{
-  width:130px;
-  height:130px;
-  object-fit:contain;
-  filter:drop-shadow(0 6px 12px rgba(0,0,0,0.2));
-  animation:floatLogo 3s ease-in-out infinite;
-}
-
-@keyframes floatLogo{
-  0%, 100%{ transform:translateY(0); }
-  50%{ transform:translateY(-8px); }
-}
-
-/* Texto debajo de los logos */
-.header-info{
-  position:relative;
-  z-index:1;
-  text-align:center;
-  padding:0 10px;
-  margin-bottom:15px;
-}
-
-.kicker{
-  color:var(--amber);
-  font-weight:800;
-  letter-spacing:.25em;
-  font-size:.75rem;
-  text-transform:uppercase;
-  margin:0 0 8px 0;
-  text-shadow:0 2px 4px rgba(0,0,0,0.3);
-}
-
-h1{
-  font-family:'Alfa Slab One',serif;
-  font-weight:400;
-  text-transform:uppercase;
-  font-size:clamp(2rem,5vw,3.5rem);
-  line-height:1.1;
-  letter-spacing:1px;
-  color:var(--paper);
-  text-shadow:0 4px 8px rgba(0,0,0,0.4);
-  margin:0;
-}
-
-.header-chips{
-  position:relative;
-  z-index:1;
-  display:flex;
-  justify-content:center;
-  gap:12px;
-  flex-wrap:wrap;
-  padding:15px;
-  background:rgba(250,245,233,0.03);
-  border-radius:12px;
-  backdrop-filter:blur(10px);
-  border:1px solid rgba(250,245,233,0.08);
-}
-
-.chip{
-  background:rgba(232,155,60,0.12);
-  border:1.5px solid rgba(232,155,60,0.3);
-  border-radius:999px;
-  padding:8px 16px;
-  font-size:.85rem;
-  font-weight:700;
-  color:var(--paper);
-  backdrop-filter:blur(10px);
-  transition:all .3s ease;
-  cursor:default;
-}
-
-.chip:hover{
-  background:rgba(232,155,60,0.25);
-  border-color:var(--amber);
-  transform:translateY(-2px);
-  box-shadow:0 4px 12px rgba(232,155,60,0.2);
-}
-
-/* ---- Responsive Tablet ---- */
-@media(max-width:900px){
-  .logos-row{
-    gap:8px;
-  }
-  
-  .header-logo{
-    width:70px;
-    height:70px;
-  }
-  
-  .event-logo{
-    width:100px;
-    height:100px;
-  }
-  
-  h1{ font-size:clamp(1.8rem,6vw,2.5rem); }
-  
-  .header-chips{
-    flex-direction:column;
-    align-items:center;
-    gap:8px;
-  }
-  
-  .chip{
-    width:100%;
-    max-width:300px;
-    text-align:center;
-  }
-}
-
-/* ---- Responsive Celular ---- */
-@media(max-width:480px){
-  header{
-    padding:20px 12px 18px;
-  }
-  
-  .logos-row{
-    gap:5px;
-    margin-bottom:12px;
-  }
-  
-  .logo-box{
-    padding:6px;
-  }
-  
-  .header-logo{
-    width:55px;
-    height:55px;
-  }
-  
-  .event-logo{
-    width:75px;
-    height:75px;
-  }
-  
-  .kicker{
-    font-size:.65rem;
-    letter-spacing:.15em;
-  }
-  
-  h1{ font-size:clamp(1.4rem,9vw,1.8rem); }
-  
-  .chip{
-    font-size:.7rem;
-    padding:5px 10px;
-  }
-}
-  .banner{border:2px solid;border-radius:12px;padding:12px 15px;font-weight:700;margin-bottom:18px;
-          display:flex;gap:10px;align-items:center;flex-wrap:wrap;background:var(--paper);color:var(--ink)}
-  .banner.warn{border-color:var(--amber-deep);background:#f8ecd2;color:#6b4713}
-  .banner.err{border-color:var(--danger);background:#f9e3dd;color:#7c2716}
-  .banner.info{border-color:var(--green);background:#e4efe4;color:var(--green-deep)}
-  .mini-link{background:none;border:none;text-decoration:underline;font:inherit;color:inherit;cursor:pointer}
-
-  .card{background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:16px;
-        box-shadow:var(--shadow);padding:24px;margin-bottom:26px}
-  .card-head{display:flex;gap:14px;align-items:flex-start;margin-bottom:20px}
-  .stepnum{font-family:'Alfa Slab One',serif;background:var(--amber);color:var(--ink);border:2px solid var(--ink);
-           border-radius:10px;padding:6px 10px;font-size:1.15rem;transform:rotate(-3deg);flex:none;
-           box-shadow:3px 3px 0 rgba(5,14,9,.25)}
-  .card-head h2{font-family:'Alfa Slab One',serif;font-weight:400;font-size:1.35rem;letter-spacing:.3px}
-  .hint{font-size:.9rem;color:var(--ink-soft);margin-top:3px}
-  .mini{font-size:.85rem;color:var(--ink-soft);margin-top:12px}
-
-  .field{display:flex;flex-direction:column;gap:6px;margin-bottom:16px}
-  .field label{font-weight:700;font-size:.95rem}
-  .req{color:var(--amber-deep)}
-  input,select{font:inherit;font-size:17px;padding:12px;border:2px solid var(--ink);border-radius:9px;
-               background:#fff;color:var(--ink);width:100%}
-  input::placeholder{color:#9aa79e}
-  input:focus,select:focus{border-color:var(--amber-deep);box-shadow:0 0 0 3px rgba(232,155,60,.35);outline:none}
-  .invalid input,.invalid select{border-color:var(--danger);background:#fdf0ec}
-  .err{display:none;color:var(--danger);font-size:.85rem;font-weight:700}
-  .invalid .err,#okErr.show{display:block}
-  @media(min-width:600px){
-    .grid2{display:grid;grid-template-columns:1fr 1fr;gap:0 18px}
-    .field.half{max-width:280px}
-  }
-
-  .grid-head{display:none}
-  .tent-row{position:relative;border:2px dashed rgba(27,42,32,.35);border-radius:12px;
-            padding:14px 14px 6px;margin-bottom:14px;animation:rowIn .3s ease}
-  .rownum{display:inline-block;background:var(--paper2);border:1.5px solid var(--ink);border-radius:999px;
-          font-weight:700;font-size:.78rem;padding:1px 10px;margin-bottom:10px}
-  .t-cell{display:flex;flex-direction:column;gap:5px;margin-bottom:12px}
-  .cell-label{font-weight:700;font-size:.85rem}
-  .txt-otro{margin-top:8px;background:#fffdf4;border-style:dashed}
-  .btn-remove{position:absolute;top:10px;right:10px;width:42px;height:42px;flex:none;
-              border:2px solid var(--ink);border-radius:50%;background:#fff;color:var(--danger);
-              font-size:22px;line-height:1;cursor:pointer;transition:.15s}
-  .btn-remove:hover:not(:disabled){background:var(--danger);color:#fff;transform:rotate(90deg)}
-  .btn-remove:disabled{opacity:.3;cursor:not-allowed}
-  @media(min-width:680px){
-    .grid-head{display:grid;grid-template-columns:1.35fr 1fr .75fr 48px;gap:10px;margin-bottom:8px;
-               color:var(--ink-soft);font-weight:700;font-size:.78rem;text-transform:uppercase;letter-spacing:.08em}
-    .tent-row{display:grid;grid-template-columns:1.35fr 1fr .75fr 48px;gap:10px;align-items:end;
-              border:0;padding:0;margin-bottom:14px}
-    .rownum{display:none}
-    .cell-label{display:none}
-    .t-cell{margin-bottom:0}
-    .btn-remove{position:static;height:49px}
-  }
-  @keyframes rowIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
-  .btn-add{width:100%;padding:14px;border:2px dashed var(--green);background:transparent;color:var(--green-deep);
-           font:inherit;font-weight:700;font-size:1rem;border-radius:10px;cursor:pointer;transition:.15s}
-  .btn-add:hover{background:rgba(31,92,61,.12);border-style:solid;transform:translateY(-2px)}
-
-  .resumen{position:sticky;bottom:10px;z-index:5;margin-top:18px;background:var(--bg2);color:var(--paper);
-           border:2px solid var(--line);border-radius:12px;padding:12px 16px;display:flex;flex-wrap:wrap;
-           gap:8px 20px;align-items:center;box-shadow:0 10px 24px rgba(0,0,0,.4)}
-  .resumen b{font-family:'Alfa Slab One',serif;font-size:1.15rem;color:var(--amber);display:inline-block}
-  .bump{animation:bump .35s}
-  @keyframes bump{40%{transform:scale(1.3)}}
-  .estado{margin-left:auto;padding:5px 12px;border-radius:999px;font-weight:700;font-size:.84rem}
-  .estado.ok{background:var(--ok);color:#fff}
-  .estado.warn{background:var(--amber);color:var(--ink)}
-  .estado.neutro{background:rgba(255,255,255,.16)}
-
-  .check{display:flex;gap:12px;align-items:flex-start;cursor:pointer;font-weight:700}
-  .check input{width:26px;height:26px;flex:none;margin-top:1px;accent-color:var(--green)}
-  .btn-main{width:100%;margin-top:18px;font-family:'Alfa Slab One',serif;font-size:1.25rem;letter-spacing:.5px;
-            background:var(--green);color:#fdf8ec;border:2px solid var(--ink);border-radius:12px;padding:16px;
-            cursor:pointer;box-shadow:var(--shadow);transition:transform .15s,box-shadow .15s,background .15s}
-  .btn-main:hover:not(:disabled){transform:translate(-2px,-2px);box-shadow:8px 8px 0 rgba(5,14,9,.45);background:var(--green-deep)}
-  .btn-main:active:not(:disabled){transform:translate(2px,2px);box-shadow:2px 2px 0 rgba(5,14,9,.45)}
-  .btn-main:disabled{opacity:.75;cursor:wait}
-  .spinner{width:17px;height:17px;border:3px solid rgba(255,255,255,.35);border-top-color:#fff;border-radius:50%;
-           display:inline-block;animation:spin .8s linear infinite;vertical-align:-2px;margin-right:9px}
-  @keyframes spin{to{transform:rotate(360deg)}}
-
-  .ticket{background:var(--paper);color:var(--ink);border:2px solid var(--ink);border-radius:16px;
-          box-shadow:var(--shadow);overflow:hidden;animation:rowIn .4s ease}
-  .ticket-top{padding:30px 24px;text-align:center}
-  .stamp{display:inline-block;border:3px solid var(--amber-deep);color:var(--amber-deep);border-radius:8px;
-         font-family:'Alfa Slab One',serif;font-size:.85rem;letter-spacing:2px;padding:5px 14px;
-         transform:rotate(-5deg);text-transform:uppercase}
-  .h-done{font-family:'Alfa Slab One',serif;font-weight:400;font-size:2.1rem;margin-top:14px}
-  .lead{font-weight:700;margin-top:4px}
-  .folio{font-family:'Alfa Slab One',serif;font-size:clamp(2rem,7vw,3.1rem);letter-spacing:3px;margin:6px 0 4px;color:var(--ink)}
-  .dash{border-top:2px dashed var(--ink);margin:0 28px;position:relative}
-  .dash::before,.dash::after{content:'';position:absolute;top:-14px;width:26px;height:26px;border-radius:50%;
-        background:var(--bg);border:2px solid var(--ink)}
-  .dash::before{left:-41px}.dash::after{right:-41px}
-  .ticket-actions{padding:20px 22px 26px;display:grid;grid-template-columns:1fr 1fr;gap:10px}
-  .btn-sec,.btn-wa,.btn-ghost{font:inherit;font-weight:700;border-radius:10px;padding:13px;cursor:pointer;
-        text-align:center;text-decoration:none;display:flex;align-items:center;justify-content:center;gap:8px;
-        border:2px solid var(--ink);background:#fff;color:var(--ink);transition:.15s}
-  .btn-sec:hover,.btn-ghost:hover{transform:translateY(-2px);box-shadow:3px 3px 0 rgba(5,14,9,.3)}
-  .btn-wa{grid-column:1/-1;background:#1da851;border-color:#0d5c2b;color:#fff}
-  .btn-wa:hover{background:#178a42;transform:translateY(-2px)}
-  .btn-ghost{grid-column:1/-1;background:transparent;border-style:dashed;color:var(--ink-soft)}
-  @media(max-width:520px){.ticket-actions{grid-template-columns:1fr}}
-
-  footer{text-align:center;color:rgba(250,245,233,.6);font-size:.85rem;margin:36px 0 54px}
-  footer p+p{margin-top:6px}
-  #toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(20px);background:var(--ink);
-         color:var(--paper);border:2px solid rgba(250,245,233,.3);padding:10px 20px;border-radius:999px;
-         font-weight:700;opacity:0;pointer-events:none;transition:.3s;z-index:60}
-  #toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-  .reveal{animation:fadeUp .6s ease both}
-  header.reveal{animation-delay:.05s}
-  .card:nth-of-type(1){animation-delay:.12s}.card:nth-of-type(2){animation-delay:.2s}.card:nth-of-type(3){animation-delay:.28s}
-  @keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:none}}
-  @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
-  #demoNote[hidden] { display: none !important; }
-</style>
-</head>
-<body>
-<div class="wrap">
-
-<header class="reveal">
-  <!-- Fondo con gradiente sutil -->
-  <div class="header-bg"></div>
-  
-  <!-- Fila de logos (siempre arriba) -->
-  <div class="logos-row">
-    <div class="logo-box logo-left">
-      <img src="logo-aventureros.png" alt="Club de Aventureros" class="header-logo">
-    </div>
-    
-    <div class="logo-center-box">
-      <img src="logo-evento.png" alt="Caminando con Jesús" class="event-logo">
-    </div>
-    
-    <div class="logo-box logo-right">
-      <img src="logo-aan.png" alt="AAN" class="header-logo">
-    </div>
-  </div>
-  
-  <!-- Texto debajo de los logos -->
-  <div class="header-info">
-    <p class="kicker" id="evento">AVENTURI 2026 · REGISTRO OFICIAL</p>
-    <h1 id="tituloForm">FORMULARIO DE CARPAS</h1>
-  </div>
-  
-  <!-- Chips de características -->
-  <div class="header-chips">
-    <span class="chip">⛺ Un formulario por agrupación</span>
-    <span class="chip">✏️ Podés editar después de enviar</span>
-    <span class="chip">📱 Celular y PC · carga liviana</span>
-  </div>
-</header>
-
-  <div id="demoNote" class="banner warn" hidden>🧪 <span><b>Modo prueba:</b> todavía no conectaste la planilla de Google. Pegá tu URL en <code>CONFIG.API_URL</code> dentro del archivo.</span></div>
- 
-  <!-- Pantalla de inicio con 2 opciones -->
-<div id="pantallaInicio" class="banner info" style="padding:30px 20px">
-  <div style="width:100%;text-align:center">
-    <h2 style="font-family:'Alfa Slab One',serif;font-size:1.5rem;margin-bottom:20px;color:var(--ink)">¿Qué querés hacer?</h2>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px;max-width:500px;margin:0 auto">
-      <button type="button" id="btnNueva" style="font:inherit;font-weight:700;font-size:1.1rem;padding:20px 15px;
-                    border:2px solid var(--ink);border-radius:12px;background:var(--green);
-                    color:#fff;cursor:pointer;box-shadow:4px 4px 0 rgba(5,14,9,.3)">
-        🆕<br>Cargar Carpas
-      </button>
-      <button type="button" id="btnModificar" style="font:inherit;font-weight:700;font-size:1.1rem;padding:20px 15px;
-                    border:2px solid var(--ink);border-radius:12px;background:var(--amber);
-                    color:var(--ink);cursor:pointer;box-shadow:4px 4px 0 rgba(5,14,9,.3)">
-        ✏️<br>Modificar existente
-      </button>
-    </div>
-    <p style="margin-top:15px;font-size:.85rem;color:var(--ink-soft)">Elegí una opción para continuar</p>
-  </div>
-</div>
-
-<!-- Buscador de código (oculto al inicio) -->
-<div id="loadNote" class="banner info" hidden>
-  <div style="width:100%">
-    <p style="margin-bottom:8px"><b>¿Querés modificar un formulario?</b> Pegá el código que se generó en tu carga anterior acá:</p>
-    <div style="display:flex;gap:8px;flex-wrap:wrap">
-      <input type="text" id="inputFolio" placeholder="Ej.: CMP-K64R2" maxlength="12"
-             style="flex:1;min-width:180px;font:inherit;font-size:16px;padding:10px 12px;
-                    border:2px solid var(--ink);border-radius:8px;background:#fff;color:var(--ink)">
-      <button type="button" id="btnBuscar" style="font:inherit;font-weight:700;padding:10px 18px;
-                    border:2px solid var(--ink);border-radius:8px;background:var(--green);
-                    color:#fff;cursor:pointer">Buscar</button>
-    </div>
-    <p id="loadMsg" style="margin-top:8px;font-size:.9rem;color:var(--ink-soft)"></p>
-    <button type="button" id="btnVolverInicio" style="margin-top:10px;font:inherit;font-size:.85rem;
-                    background:none;border:none;color:var(--ink-soft);cursor:pointer;text-decoration:underline">
-      ← Volver al inicio
-    </button>
-  </div>
-</div>
-
-<!-- Formulario (oculto al inicio) -->
-<form id="form" novalidate hidden>
-    <div id="editNote" class="banner info" hidden>✏️ <span>Estás editando la inscripción <b id="editFolioLbl"></b>. Corregí o agregá lo que necesites y volvé a enviar: <b>se actualiza, no se duplica</b>.</span></div>
-
-      <section class="card reveal">
-      <div class="card-head">
-        <span class="stepnum">01</span>
-        <div><h2>La agrupación</h2><p class="hint">Datos del club que participa del campamento.</p></div>
-      </div>
-      <div class="grid2">
-        <div class="field" id="fClub">
-          <label for="club">Nombre de Club <span class="req">*</span></label>
-          <input id="club" type="text" autocomplete="organization" maxlength="80" placeholder="Ej.: Club Halcones">
-          <p class="err">Escribí el nombre del club.</p>
-        </div>
-        <div class="field" id="fDist">
-          <label for="distrito">Distrito <span class="req">*</span></label>
-          <input id="distrito" type="text" maxlength="60" placeholder="Ej.: Distrito 3">
-          <p class="err">Escribí el distrito.</p>
-        </div>
-      </div>
-      <div class="field half" id="fAc">
-        <label for="acampantes">Cantidad de acampantes <span class="req">*</span></label>
-        <input id="acampantes" type="number" min="1" step="1" inputmode="numeric" placeholder="Ej.: 12">
-        <p class="err">Ingresá un número entero mayor a 0.</p>
-      </div>
-    </section>
-
-    <section class="card reveal">
-      <div class="card-head">
-        <span class="stepnum">02</span>
-        <div><h2>Carpas</h2>
-        <p class="hint">Una fila por cada tipo de carpa o gazebo. Ej.: <b>3 carpas Iglú de 4 personas</b>. Si tu carpa no está en la lista, elegí <b>«Otra…»</b> y escribila. Podés agregar todas las filas que necesites.</p></div>
-      </div>
-      <div class="grid-head" aria-hidden="true"><span>Tipo de carpa</span><span>Capacidad</span><span>Cantidad</span><span></span></div>
-      <div id="rows"></div>
-      <button type="button" class="btn-add" id="btnAdd">＋ Agregar otra carpa</button>
-      <div class="resumen" role="status" aria-live="polite">
-        <span>⛺ <b id="rCarpas">0</b> carpas</span>
-        <span>🛏️ <b id="rPlazas">0</b> plazas</span>
-        <span class="estado neutro" id="rEstado">Completá los datos</span>
-      </div>
-    </section>
-
-    <section class="card reveal">
-      <div class="card-head">
-        <span class="stepnum">03</span>
-        <div><h2>Confirmar y enviar</h2></div>
-      </div>
-      <label class="check"><input type="checkbox" id="ok">
-        <span>Confirmo que los datos son correctos y que este es el único formulario de mi agrupación.</span>
-      </label>
-      <p class="err" id="okErr">Marcá la casilla de confirmación para poder enviar.</p>
-      <div id="sendErr" class="banner err" hidden style="margin-top:16px"></div>
-      <button class="btn-main" id="btnSend" type="submit"><span id="sendLabel">ENVIAR INSCRIPCIÓN</span></button>
-      <p class="mini">Al enviar vas a recibir un <b>código de edición</b>. Guardalo: te sirve para corregir datos o sumar carpas más tarde.</p>
-    </section>
-  </form>
-
-  <section id="done" hidden>
-    <div class="ticket">
-      <div class="ticket-top">
-        <span class="stamp">Inscripción recibida</span>
-        <h2 class="h-done">⛺ ¡Listo!</h2>
-        <p class="lead" id="doneResumen"></p>
-        <p class="mini">Tu código de edición es</p>
-        <p class="folio" id="folioLbl">—</p>
-        <p class="mini">Guardalo o sacale una captura: lo necesitás para corregir o ampliar tu inscripción.</p>
-      </div>
-      <div class="dash" aria-hidden="true"></div>
-      <div class="ticket-actions">
-        <button class="btn-sec" id="btnCopyFolio" type="button">📋 Copiar código</button>
-        <button class="btn-sec" id="btnCopyLink" type="button">🔗 Copiar link de edición</button>
-        <a class="btn-wa" id="btnWa" target="_blank" rel="noopener">💬 Compartir los datos por WhatsApp</a>
-        <button class="btn-sec" id="btnEditNow" type="button">✏️ Corregir o agregar carpas ahora</button>
-        <button class="btn-ghost" id="btnNew" type="button">Inscribir otra agrupación</button>
-      </div>
-    </div>
-  </section>
-
-  <footer class="reveal">
-    <p id="orgLine"></p>
-    <p>Página liviana (~30 KB), pensada para conexiones lentas. No necesita apps ni cuentas.</p>
-  </footer>
-</div>
-
-<div id="toast" role="status"></div>
-
-<script>
-/* ================== CONFIGURACIÓN (editá acá) ================== */
-const CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbzQ6hn8LWnFMAHqxm7mh6H1FFcHWJ4uZ-AOlgTQxQP_2IC-MQHxrRmcYIE6TDzQ3Zjvzg/exec',
-  LOGO: 'logo-evento.png',  // ← Cambiado
-  TITULO: 'Formulario de carpas',
-  NOMBRE_EVENTO: 'Aventuri 2026',
-  ORGANIZACION: 'Zona Este, AAN'
-};
-/* ================================================================ */
-
-const TIPOS = ['Canadiense', 'Iglú', 'Estructural', 'Gazebo 2x2', 'Gazebo 3x3'];
-const CAPACIDADES = [2, 4, 6, 8];
-const DRAFT_KEY = 'campamento-borrador';
-const DEMO = !CONFIG.API_URL || CONFIG.API_URL.indexOf('PEGA_AQUI') === 0;
-
-const $ = id => document.getElementById(id);
-const rowsEl = $('rows');
-let folioActual = null, editando = false, tDraft, tToast;
-
-/* ---- Textos del encabezado y logo ---- */
-document.title = 'Inscripción — ' + CONFIG.NOMBRE_EVENTO;
-$('evento').textContent = CONFIG.NOMBRE_EVENTO + ' · Registro oficial';
-$('tituloForm').textContent = CONFIG.TITULO;
-$('orgLine').textContent = 'Organiza: ' + CONFIG.ORGANIZACION;
-
-if (DEMO) $('demoNote').hidden = false;
-
-/* ---- Filas de carpas ---- */
-function nuevaFila(d){
-  d = d || {};
-  const row = document.createElement('div');
-  row.className = 'tent-row';
-  row.innerHTML =
-    '<span class="rownum">Carpa 1</span>' +
-    '<div class="t-cell"><label class="cell-label">Tipo de carpa</label>' +
-      '<select class="sel-tipo" aria-label="Tipo de carpa"><option value="">Elegí…</option>' +
-      TIPOS.map(t => '<option value="'+t+'"'+(d.tipo===t?' selected':'')+'>'+t+'</option>').join('') +
-      '</select>' +
-      '<p class="err">Elegí el tipo.</p></div>' +
-    '<div class="t-cell"><label class="cell-label">Capacidad</label>' +
-      '<select class="sel-cap" aria-label="Capacidad de la carpa"><option value="">Elegí…</option>' +
-      CAPACIDADES.map(c => '<option value="'+c+'"'+(Number(d.capacidad)===c?' selected':'')+'>'+c+' personas</option>').join('') +
-      '<option value="0"'+((d.capacidad===0||d.capacidad==='0')?' selected':'')+'>No aplica (no duerme gente)</option>' +
-      '<option value="otra"'+(Number(d.capacidad)>0 && CAPACIDADES.indexOf(Number(d.capacidad))===-1?' selected':'')+'>Otra capacidad…</option>' +
-      '</select>' +
-      '<input class="num-cap-otra" type="number" min="1" step="1" inputmode="numeric" placeholder="Ej.: 10" aria-label="Otra capacidad" hidden style="margin-top:8px;background:#fffdf4;border-style:dashed">' +
-      '<p class="err">Elegí la capacidad.</p></div>' +
-    '<div class="t-cell"><label class="cell-label">Cantidad</label>' +
-      '<input class="num-cant" type="number" min="1" step="1" inputmode="numeric" aria-label="Cantidad de carpas" ' +
-      'value="'+(Number(d.cantidad)>0?Number(d.cantidad):'')+'" placeholder="Ej.: ¿Cuántas?"><p class="err">Número entero, mínimo 1.</p></div>' +
-    '<button type="button" class="btn-remove" aria-label="Quitar esta fila" title="Quitar fila">✕</button>';
-  
-  row.querySelector('.btn-remove').addEventListener('click', () => {
-    if (rowsEl.children.length > 1){ row.remove(); actualizarQuitar(); actualizarResumen(); guardarBorrador(); }
-  });
-  
-  const selCap = row.querySelector('.sel-cap');
-  const numCapOtra = row.querySelector('.num-cap-otra');
-  
-  const syncCap = () => {
-    numCapOtra.hidden = selCap.value !== 'otra';
-  };
-  
-  selCap.addEventListener('change', syncCap);
-  syncCap();
-  
-  return row;
-}
-
-function actualizarQuitar(){
-  const n = rowsEl.children.length;
-  [...rowsEl.children].forEach((r,i) => {
-    r.querySelector('.rownum').textContent = 'Carpa ' + (i+1);
-    r.querySelector('.btn-remove').disabled = n === 1;
-  });
-}
-
-/* ---- Datos ---- */
-function leerDatos(){
-  return {
-    club: $('club').value.trim(),
-    distrito: $('distrito').value.trim(),
-    acampantes: parseInt($('acampantes').value, 10) || 0,
-    carpas: [...rowsEl.children].map(r => {
-      const selTipo = r.querySelector('.sel-tipo');
-      const selCap = r.querySelector('.sel-cap');
-      const numCapOtra = r.querySelector('.num-cap-otra');
-      
-      let capacidad = 0;
-      if (selCap.value === 'otra'){
-        capacidad = parseInt(numCapOtra.value, 10) || 0;
-      } else {
-        capacidad = parseInt(selCap.value, 10) || 0;
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Ficha de inscripción — Campamento</title>
+    <meta
+      name="description"
+      content="Inscripción de campamento: datos del club y carpas. Podés editar tu inscripción después de enviar."
+    />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9B%BA%3C/text%3E%3C/svg%3E"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Alfa+Slab+One&family=Atkinson+Hyperlegible:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0e2117;
+        --bg2: #143226;
+        --paper: #faf5e9;
+        --paper2: #efe6d0;
+        --ink: #1b2a20;
+        --ink-soft: #4c5c50;
+        --amber: #e89b3c;
+        --amber-deep: #c07a1d;
+        --green: #1f5c3d;
+        --green-deep: #164730;
+        --danger: #c2452d;
+        --ok: #2e7d4f;
+        --line: #2a4434;
+        --shadow: 6px 6px 0 rgba(5, 14, 9, 0.45);
       }
-      
-      return {
-        tipo: selTipo.value,
-        capacidad: capacidad,
-        cantidad: parseInt(r.querySelector('.num-cant').value, 10) || 0
+      * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+      body {
+        font-family:
+          "Atkinson Hyperlegible",
+          system-ui,
+          Segoe UI,
+          sans-serif;
+        font-size: 17px;
+        color: var(--paper);
+        background-color: var(--bg);
+        background-image:
+          radial-gradient(
+            ellipse 90% 55% at 50% -10%,
+            rgba(232, 155, 60, 0.14),
+            transparent 60%
+          ),
+          repeating-radial-gradient(
+            circle at 12% 18%,
+            transparent 0 46px,
+            rgba(255, 255, 255, 0.045) 46px 47.5px
+          ),
+          repeating-radial-gradient(
+            circle at 88% 78%,
+            transparent 0 62px,
+            rgba(255, 255, 255, 0.04) 62px 63.5px
+          );
+        min-height: 100vh;
+      }
+      ::selection {
+        background: var(--amber);
+        color: var(--ink);
+      }
+      :focus-visible {
+        outline: 3px solid var(--amber);
+        outline-offset: 2px;
+      }
+      .wrap {
+        width: min(100% - 32px, 780px);
+        margin: 0 auto;
+      }
+
+      /* ---- Header profesional con 3 logos ---- */
+      /* ---- Header Moderno y Profesional ---- */
+      /* ---- Header Moderno y Profesional ---- */
+      header {
+        position: relative;
+        padding: 30px 20px 25px;
+        margin-bottom: 20px;
+      }
+
+      .header-bg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(
+          135deg,
+          rgba(232, 155, 60, 0.08) 0%,
+          rgba(31, 92, 61, 0.06) 50%,
+          rgba(232, 155, 60, 0.08) 100%
+        );
+        border-radius: 16px;
+        z-index: 0;
+        backdrop-filter: blur(10px);
+      }
+
+      /* Fila de logos: 3 logos siempre en línea */
+      .logos-row {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: 1fr auto 1fr;
+        align-items: center;
+        justify-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      .logo-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 12px;
+        background: rgba(250, 245, 233, 0.05);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 2px solid rgba(250, 245, 233, 0.1);
+        transition:
+          transform 0.3s ease,
+          box-shadow 0.3s ease;
+      }
+
+      .logo-box:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 30px rgba(232, 155, 60, 0.2);
+      }
+
+      .header-logo {
+        width: 90px;
+        height: 90px;
+        object-fit: contain;
+        filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.15));
+        transition: all 0.3s ease;
+      }
+
+      .header-logo:hover {
+        transform: scale(1.05);
+        filter: drop-shadow(0 6px 12px rgba(232, 155, 60, 0.3));
+      }
+
+      .logo-center-box {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .event-logo {
+        width: 130px;
+        height: 130px;
+        object-fit: contain;
+        filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+        animation: floatLogo 3s ease-in-out infinite;
+      }
+
+      @keyframes floatLogo {
+        0%,
+        100% {
+          transform: translateY(0);
+        }
+        50% {
+          transform: translateY(-8px);
+        }
+      }
+
+      /* Texto debajo de los logos */
+      .header-info {
+        position: relative;
+        z-index: 1;
+        text-align: center;
+        padding: 0 10px;
+        margin-bottom: 15px;
+      }
+
+      .kicker {
+        color: var(--amber);
+        font-weight: 800;
+        letter-spacing: 0.25em;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin: 0 0 8px 0;
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      h1 {
+        font-family: "Alfa Slab One", serif;
+        font-weight: 400;
+        text-transform: uppercase;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        line-height: 1.1;
+        letter-spacing: 1px;
+        color: var(--paper);
+        text-shadow: 0 4px 8px rgba(0, 0, 0, 0.4);
+        margin: 0;
+      }
+
+      .header-chips {
+        position: relative;
+        z-index: 1;
+        display: flex;
+        justify-content: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 15px;
+        background: rgba(250, 245, 233, 0.03);
+        border-radius: 12px;
+        backdrop-filter: blur(10px);
+        border: 1px solid rgba(250, 245, 233, 0.08);
+      }
+
+      .chip {
+        background: rgba(232, 155, 60, 0.12);
+        border: 1.5px solid rgba(232, 155, 60, 0.3);
+        border-radius: 999px;
+        padding: 8px 16px;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--paper);
+        backdrop-filter: blur(10px);
+        transition: all 0.3s ease;
+        cursor: default;
+      }
+
+      .chip:hover {
+        background: rgba(232, 155, 60, 0.25);
+        border-color: var(--amber);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(232, 155, 60, 0.2);
+      }
+
+      /* ---- Responsive Tablet ---- */
+      @media (max-width: 900px) {
+        .logos-row {
+          gap: 8px;
+        }
+
+        .header-logo {
+          width: 70px;
+          height: 70px;
+        }
+
+        .event-logo {
+          width: 100px;
+          height: 100px;
+        }
+
+        h1 {
+          font-size: clamp(1.8rem, 6vw, 2.5rem);
+        }
+
+        .header-chips {
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .chip {
+          width: 100%;
+          max-width: 300px;
+          text-align: center;
+        }
+      }
+
+      /* ---- Responsive Celular ---- */
+      @media (max-width: 480px) {
+        header {
+          padding: 20px 12px 18px;
+        }
+
+        .logos-row {
+          gap: 5px;
+          margin-bottom: 12px;
+        }
+
+        .logo-box {
+          padding: 6px;
+        }
+
+        .header-logo {
+          width: 55px;
+          height: 55px;
+        }
+
+        .event-logo {
+          width: 75px;
+          height: 75px;
+        }
+
+        .kicker {
+          font-size: 0.65rem;
+          letter-spacing: 0.15em;
+        }
+
+        h1 {
+          font-size: clamp(1.4rem, 9vw, 1.8rem);
+        }
+
+        .chip {
+          font-size: 0.7rem;
+          padding: 5px 10px;
+        }
+      }
+      .banner {
+        border: 2px solid;
+        border-radius: 12px;
+        padding: 12px 15px;
+        font-weight: 700;
+        margin-bottom: 18px;
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        flex-wrap: wrap;
+        background: var(--paper);
+        color: var(--ink);
+      }
+      .banner.warn {
+        border-color: var(--amber-deep);
+        background: #f8ecd2;
+        color: #6b4713;
+      }
+      .banner.err {
+        border-color: var(--danger);
+        background: #f9e3dd;
+        color: #7c2716;
+      }
+      .banner.info {
+        border-color: var(--green);
+        background: #e4efe4;
+        color: var(--green-deep);
+      }
+      .mini-link {
+        background: none;
+        border: none;
+        text-decoration: underline;
+        font: inherit;
+        color: inherit;
+        cursor: pointer;
+      }
+
+      .card {
+        background: var(--paper);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        margin-bottom: 26px;
+      }
+      .card-head {
+        display: flex;
+        gap: 14px;
+        align-items: flex-start;
+        margin-bottom: 20px;
+      }
+      .stepnum {
+        font-family: "Alfa Slab One", serif;
+        background: var(--amber);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 10px;
+        padding: 6px 10px;
+        font-size: 1.15rem;
+        transform: rotate(-3deg);
+        flex: none;
+        box-shadow: 3px 3px 0 rgba(5, 14, 9, 0.25);
+      }
+      .card-head h2 {
+        font-family: "Alfa Slab One", serif;
+        font-weight: 400;
+        font-size: 1.35rem;
+        letter-spacing: 0.3px;
+      }
+      .hint {
+        font-size: 0.9rem;
+        color: var(--ink-soft);
+        margin-top: 3px;
+      }
+      .mini {
+        font-size: 0.85rem;
+        color: var(--ink-soft);
+        margin-top: 12px;
+      }
+
+      .field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-bottom: 16px;
+      }
+      .field label {
+        font-weight: 700;
+        font-size: 0.95rem;
+      }
+      .req {
+        color: var(--amber-deep);
+      }
+      input,
+      select {
+        font: inherit;
+        font-size: 17px;
+        padding: 12px;
+        border: 2px solid var(--ink);
+        border-radius: 9px;
+        background: #fff;
+        color: var(--ink);
+        width: 100%;
+      }
+      input::placeholder {
+        color: #9aa79e;
+      }
+      input:focus,
+      select:focus {
+        border-color: var(--amber-deep);
+        box-shadow: 0 0 0 3px rgba(232, 155, 60, 0.35);
+        outline: none;
+      }
+      .invalid input,
+      .invalid select {
+        border-color: var(--danger);
+        background: #fdf0ec;
+      }
+      .err {
+        display: none;
+        color: var(--danger);
+        font-size: 0.85rem;
+        font-weight: 700;
+      }
+      .invalid .err,
+      #okErr.show {
+        display: block;
+      }
+      @media (min-width: 600px) {
+        .grid2 {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0 18px;
+        }
+        .field.half {
+          max-width: 280px;
+        }
+      }
+
+      .grid-head {
+        display: none;
+      }
+      .tent-row {
+        position: relative;
+        border: 2px dashed rgba(27, 42, 32, 0.35);
+        border-radius: 12px;
+        padding: 14px 14px 6px;
+        margin-bottom: 14px;
+        animation: rowIn 0.3s ease;
+      }
+      .rownum {
+        display: inline-block;
+        background: var(--paper2);
+        border: 1.5px solid var(--ink);
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.78rem;
+        padding: 1px 10px;
+        margin-bottom: 10px;
+      }
+      .t-cell {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 12px;
+      }
+      .cell-label {
+        font-weight: 700;
+        font-size: 0.85rem;
+      }
+      .txt-otro {
+        margin-top: 8px;
+        background: #fffdf4;
+        border-style: dashed;
+      }
+      .btn-remove {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 42px;
+        height: 42px;
+        flex: none;
+        border: 2px solid var(--ink);
+        border-radius: 50%;
+        background: #fff;
+        color: var(--danger);
+        font-size: 22px;
+        line-height: 1;
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      .btn-remove:hover:not(:disabled) {
+        background: var(--danger);
+        color: #fff;
+        transform: rotate(90deg);
+      }
+      .btn-remove:disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+      }
+      @media (min-width: 680px) {
+        .grid-head {
+          display: grid;
+          grid-template-columns: 1.35fr 1fr 0.75fr 48px;
+          gap: 10px;
+          margin-bottom: 8px;
+          color: var(--ink-soft);
+          font-weight: 700;
+          font-size: 0.78rem;
+          text-transform: uppercase;
+          letter-spacing: 0.08em;
+        }
+        .tent-row {
+          display: grid;
+          grid-template-columns: 1.35fr 1fr 0.75fr 48px;
+          gap: 10px;
+          align-items: end;
+          border: 0;
+          padding: 0;
+          margin-bottom: 14px;
+        }
+        .rownum {
+          display: none;
+        }
+        .cell-label {
+          display: none;
+        }
+        .t-cell {
+          margin-bottom: 0;
+        }
+        .btn-remove {
+          position: static;
+          height: 49px;
+        }
+      }
+      @keyframes rowIn {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      .btn-add {
+        width: 100%;
+        padding: 14px;
+        border: 2px dashed var(--green);
+        background: transparent;
+        color: var(--green-deep);
+        font: inherit;
+        font-weight: 700;
+        font-size: 1rem;
+        border-radius: 10px;
+        cursor: pointer;
+        transition: 0.15s;
+      }
+      .btn-add:hover {
+        background: rgba(31, 92, 61, 0.12);
+        border-style: solid;
+        transform: translateY(-2px);
+      }
+
+      .resumen {
+        position: sticky;
+        bottom: 10px;
+        z-index: 5;
+        margin-top: 18px;
+        background: var(--bg2);
+        color: var(--paper);
+        border: 2px solid var(--line);
+        border-radius: 12px;
+        padding: 12px 16px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px 20px;
+        align-items: center;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, 0.4);
+      }
+      .resumen b {
+        font-family: "Alfa Slab One", serif;
+        font-size: 1.15rem;
+        color: var(--amber);
+        display: inline-block;
+      }
+      .bump {
+        animation: bump 0.35s;
+      }
+      @keyframes bump {
+        40% {
+          transform: scale(1.3);
+        }
+      }
+      .estado {
+        margin-left: auto;
+        padding: 5px 12px;
+        border-radius: 999px;
+        font-weight: 700;
+        font-size: 0.84rem;
+      }
+      .estado.ok {
+        background: var(--ok);
+        color: #fff;
+      }
+      .estado.warn {
+        background: var(--amber);
+        color: var(--ink);
+      }
+      .estado.neutro {
+        background: rgba(255, 255, 255, 0.16);
+      }
+
+      .check {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        cursor: pointer;
+        font-weight: 700;
+      }
+      .check input {
+        width: 26px;
+        height: 26px;
+        flex: none;
+        margin-top: 1px;
+        accent-color: var(--green);
+      }
+      .btn-main {
+        width: 100%;
+        margin-top: 18px;
+        font-family: "Alfa Slab One", serif;
+        font-size: 1.25rem;
+        letter-spacing: 0.5px;
+        background: var(--green);
+        color: #fdf8ec;
+        border: 2px solid var(--ink);
+        border-radius: 12px;
+        padding: 16px;
+        cursor: pointer;
+        box-shadow: var(--shadow);
+        transition:
+          transform 0.15s,
+          box-shadow 0.15s,
+          background 0.15s;
+      }
+      .btn-main:hover:not(:disabled) {
+        transform: translate(-2px, -2px);
+        box-shadow: 8px 8px 0 rgba(5, 14, 9, 0.45);
+        background: var(--green-deep);
+      }
+      .btn-main:active:not(:disabled) {
+        transform: translate(2px, 2px);
+        box-shadow: 2px 2px 0 rgba(5, 14, 9, 0.45);
+      }
+      .btn-main:disabled {
+        opacity: 0.75;
+        cursor: wait;
+      }
+      .spinner {
+        width: 17px;
+        height: 17px;
+        border: 3px solid rgba(255, 255, 255, 0.35);
+        border-top-color: #fff;
+        border-radius: 50%;
+        display: inline-block;
+        animation: spin 0.8s linear infinite;
+        vertical-align: -2px;
+        margin-right: 9px;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      .ticket {
+        background: var(--paper);
+        color: var(--ink);
+        border: 2px solid var(--ink);
+        border-radius: 16px;
+        box-shadow: var(--shadow);
+        overflow: hidden;
+        animation: rowIn 0.4s ease;
+      }
+      .ticket-top {
+        padding: 30px 24px;
+        text-align: center;
+      }
+      .stamp {
+        display: inline-block;
+        border: 3px solid var(--amber-deep);
+        color: var(--amber-deep);
+        border-radius: 8px;
+        font-family: "Alfa Slab One", serif;
+        font-size: 0.85rem;
+        letter-spacing: 2px;
+        padding: 5px 14px;
+        transform: rotate(-5deg);
+        text-transform: uppercase;
+      }
+      .h-done {
+        font-family: "Alfa Slab One", serif;
+        font-weight: 400;
+        font-size: 2.1rem;
+        margin-top: 14px;
+      }
+      .lead {
+        font-weight: 700;
+        margin-top: 4px;
+      }
+      .folio {
+        font-family: "Alfa Slab One", serif;
+        font-size: clamp(2rem, 7vw, 3.1rem);
+        letter-spacing: 3px;
+        margin: 6px 0 4px;
+        color: var(--ink);
+      }
+      .dash {
+        border-top: 2px dashed var(--ink);
+        margin: 0 28px;
+        position: relative;
+      }
+      .dash::before,
+      .dash::after {
+        content: "";
+        position: absolute;
+        top: -14px;
+        width: 26px;
+        height: 26px;
+        border-radius: 50%;
+        background: var(--bg);
+        border: 2px solid var(--ink);
+      }
+      .dash::before {
+        left: -41px;
+      }
+      .dash::after {
+        right: -41px;
+      }
+      .ticket-actions {
+        padding: 20px 22px 26px;
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .btn-sec,
+      .btn-wa,
+      .btn-ghost {
+        font: inherit;
+        font-weight: 700;
+        border-radius: 10px;
+        padding: 13px;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 2px solid var(--ink);
+        background: #fff;
+        color: var(--ink);
+        transition: 0.15s;
+      }
+      .btn-sec:hover,
+      .btn-ghost:hover {
+        transform: translateY(-2px);
+        box-shadow: 3px 3px 0 rgba(5, 14, 9, 0.3);
+      }
+      .btn-wa {
+        grid-column: 1/-1;
+        background: #1da851;
+        border-color: #0d5c2b;
+        color: #fff;
+      }
+      .btn-wa:hover {
+        background: #178a42;
+        transform: translateY(-2px);
+      }
+      .btn-ghost {
+        grid-column: 1/-1;
+        background: transparent;
+        border-style: dashed;
+        color: var(--ink-soft);
+      }
+      @media (max-width: 520px) {
+        .ticket-actions {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      footer {
+        text-align: center;
+        color: rgba(250, 245, 233, 0.6);
+        font-size: 0.85rem;
+        margin: 36px 0 54px;
+      }
+      footer p + p {
+        margin-top: 6px;
+      }
+      #toast {
+        position: fixed;
+        left: 50%;
+        bottom: 22px;
+        transform: translateX(-50%) translateY(20px);
+        background: var(--ink);
+        color: var(--paper);
+        border: 2px solid rgba(250, 245, 233, 0.3);
+        padding: 10px 20px;
+        border-radius: 999px;
+        font-weight: 700;
+        opacity: 0;
+        pointer-events: none;
+        transition: 0.3s;
+        z-index: 60;
+      }
+      #toast.show {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+      .reveal {
+        animation: fadeUp 0.6s ease both;
+      }
+      header.reveal {
+        animation-delay: 0.05s;
+      }
+      .card:nth-of-type(1) {
+        animation-delay: 0.12s;
+      }
+      .card:nth-of-type(2) {
+        animation-delay: 0.2s;
+      }
+      .card:nth-of-type(3) {
+        animation-delay: 0.28s;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(16px);
+        }
+        to {
+          opacity: 1;
+          transform: none;
+        }
+      }
+      @media (prefers-reduced-motion: reduce) {
+        * {
+          animation: none !important;
+          transition: none !important;
+        }
+      }
+      #demoNote[hidden] {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <header class="reveal">
+        <!-- Fondo con gradiente sutil -->
+        <div class="header-bg"></div>
+
+        <!-- Fila de logos (siempre arriba) -->
+        <div class="logos-row">
+          <div class="logo-box logo-left">
+            <img
+              src="logo-aventureros.png"
+              alt="Club de Aventureros"
+              class="header-logo"
+            />
+          </div>
+
+          <div class="logo-center-box">
+            <img
+              src="logo-evento.png"
+              alt="Caminando con Jesús"
+              class="event-logo"
+            />
+          </div>
+
+          <div class="logo-box logo-right">
+            <img src="logo-aan.png" alt="AAN" class="header-logo" />
+          </div>
+        </div>
+
+        <!-- Texto debajo de los logos -->
+        <div class="header-info">
+          <p class="kicker" id="evento">AVENTURI 2026 · REGISTRO OFICIAL</p>
+          <h1 id="tituloForm">FORMULARIO DE CARPAS</h1>
+        </div>
+
+        <!-- Chips de características -->
+        <div class="header-chips">
+          <span class="chip">⛺ Un formulario por agrupación</span>
+          <span class="chip">✏️ Podés editar después de enviar</span>
+          <span class="chip">📱 Celular y PC · carga liviana</span>
+        </div>
+      </header>
+
+      <div id="demoNote" class="banner warn" hidden>
+        🧪
+        <span
+          ><b>Modo prueba:</b> todavía no conectaste la planilla de Google. Pegá
+          tu URL en <code>CONFIG.API_URL</code> dentro del archivo.</span
+        >
+      </div>
+
+      <!-- Pantalla de inicio con 2 opciones -->
+      <div id="pantallaInicio" class="banner info" style="padding: 30px 20px">
+        <div style="width: 100%; text-align: center">
+          <h2
+            style="
+              font-family: &quot;Alfa Slab One&quot;, serif;
+              font-size: 1.5rem;
+              margin-bottom: 20px;
+              color: var(--ink);
+            "
+          >
+            ¿Qué querés hacer?
+          </h2>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: 1fr 1fr;
+              gap: 15px;
+              max-width: 500px;
+              margin: 0 auto;
+            "
+          >
+            <button
+              type="button"
+              id="btnNueva"
+              style="
+                font: inherit;
+                font-weight: 700;
+                font-size: 1.1rem;
+                padding: 20px 15px;
+                border: 2px solid var(--ink);
+                border-radius: 12px;
+                background: var(--green);
+                color: #fff;
+                cursor: pointer;
+                box-shadow: 4px 4px 0 rgba(5, 14, 9, 0.3);
+              "
+            >
+              🆕<br />Cargar Carpas
+            </button>
+            <button
+              type="button"
+              id="btnModificar"
+              style="
+                font: inherit;
+                font-weight: 700;
+                font-size: 1.1rem;
+                padding: 20px 15px;
+                border: 2px solid var(--ink);
+                border-radius: 12px;
+                background: var(--amber);
+                color: var(--ink);
+                cursor: pointer;
+                box-shadow: 4px 4px 0 rgba(5, 14, 9, 0.3);
+              "
+            >
+              ✏️<br />Modificar existente
+            </button>
+          </div>
+          <p
+            style="margin-top: 15px; font-size: 0.85rem; color: var(--ink-soft)"
+          >
+            Elegí una opción para continuar
+          </p>
+        </div>
+      </div>
+
+      <!-- Buscador de código (oculto al inicio) -->
+      <div id="loadNote" class="banner info" hidden>
+        <div style="width: 100%">
+          <p style="margin-bottom: 8px">
+            <b>¿Querés modificar un formulario?</b> Pegá el código que se generó
+            en tu carga anterior acá:
+          </p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap">
+            <input
+              type="text"
+              id="inputFolio"
+              placeholder="Ej.: CMP-K64R2"
+              maxlength="12"
+              style="
+                flex: 1;
+                min-width: 180px;
+                font: inherit;
+                font-size: 16px;
+                padding: 10px 12px;
+                border: 2px solid var(--ink);
+                border-radius: 8px;
+                background: #fff;
+                color: var(--ink);
+              "
+            />
+            <button
+              type="button"
+              id="btnBuscar"
+              style="
+                font: inherit;
+                font-weight: 700;
+                padding: 10px 18px;
+                border: 2px solid var(--ink);
+                border-radius: 8px;
+                background: var(--green);
+                color: #fff;
+                cursor: pointer;
+              "
+            >
+              Buscar
+            </button>
+          </div>
+          <p
+            id="loadMsg"
+            style="margin-top: 8px; font-size: 0.9rem; color: var(--ink-soft)"
+          ></p>
+          <button
+            type="button"
+            id="btnVolverInicio"
+            style="
+              margin-top: 10px;
+              font: inherit;
+              font-size: 0.85rem;
+              background: none;
+              border: none;
+              color: var(--ink-soft);
+              cursor: pointer;
+              text-decoration: underline;
+            "
+          >
+            ← Volver al inicio
+          </button>
+        </div>
+      </div>
+
+      <!-- Formulario (oculto al inicio) -->
+      <form id="form" novalidate hidden>
+        <div id="editNote" class="banner info" hidden>
+          ✏️
+          <span
+            >Estás editando la inscripción <b id="editFolioLbl"></b>. Corregí o
+            agregá lo que necesites y volvé a enviar:
+            <b>se actualiza, no se duplica</b>.</span
+          >
+        </div>
+
+        <section class="card reveal">
+          <div class="card-head">
+            <span class="stepnum">01</span>
+            <div>
+              <h2>La agrupación</h2>
+              <p class="hint">Datos del club que participa del campamento.</p>
+            </div>
+          </div>
+          <div class="grid2">
+            <div class="field" id="fClub">
+              <label for="club"
+                >Nombre de Club <span class="req">*</span></label
+              >
+              <input
+                id="club"
+                type="text"
+                autocomplete="organization"
+                maxlength="80"
+                placeholder="Ej.: Club Halcones"
+              />
+              <p class="err">Escribí el nombre del club.</p>
+            </div>
+            <div class="field" id="fDist">
+              <label for="distrito">Distrito <span class="req">*</span></label>
+              <input
+                id="distrito"
+                type="text"
+                maxlength="60"
+                placeholder="Ej.: Distrito 3"
+              />
+              <p class="err">Escribí el distrito.</p>
+            </div>
+          </div>
+          <div class="field half" id="fAc">
+            <label for="acampantes"
+              >Cantidad de acampantes <span class="req">*</span></label
+            >
+            <input
+              id="acampantes"
+              type="number"
+              min="1"
+              step="1"
+              inputmode="numeric"
+              placeholder="Ej.: 12"
+            />
+            <p class="err">Ingresá un número entero mayor a 0.</p>
+          </div>
+        </section>
+
+        <section class="card reveal">
+          <div class="card-head">
+            <span class="stepnum">02</span>
+            <div>
+              <h2>Carpas</h2>
+              <p class="hint">
+                Una fila por cada tipo de carpa o gazebo. Ej.:
+                <b>3 carpas Iglú de 4 personas</b>. Si tu carpa no está en la
+                lista, elegí <b>«Otra…»</b> y escribila. Podés agregar todas las
+                filas que necesites.
+              </p>
+            </div>
+          </div>
+          <div class="grid-head" aria-hidden="true">
+            <span>Tipo de carpa</span><span>Capacidad</span><span>Cantidad</span
+            ><span></span>
+          </div>
+          <div id="rows"></div>
+          <button type="button" class="btn-add" id="btnAdd">
+            ＋ Agregar otra carpa
+          </button>
+          <div class="resumen" role="status" aria-live="polite">
+            <span>⛺ <b id="rCarpas">0</b> carpas</span>
+            <span>🛏️ <b id="rPlazas">0</b> plazas</span>
+            <span class="estado neutro" id="rEstado">Completá los datos</span>
+          </div>
+        </section>
+
+        <section class="card reveal">
+          <div class="card-head">
+            <span class="stepnum">03</span>
+            <div><h2>Confirmar y enviar</h2></div>
+          </div>
+          <label class="check"
+            ><input type="checkbox" id="ok" />
+            <span
+              >Confirmo que los datos son correctos y que este es el único
+              formulario de mi agrupación.</span
+            >
+          </label>
+          <p class="err" id="okErr">
+            Marcá la casilla de confirmación para poder enviar.
+          </p>
+          <div
+            id="sendErr"
+            class="banner err"
+            hidden
+            style="margin-top: 16px"
+          ></div>
+          <button class="btn-main" id="btnSend" type="submit">
+            <span id="sendLabel">ENVIAR INSCRIPCIÓN</span>
+          </button>
+          <p class="mini">
+            Al enviar vas a recibir un <b>código de edición</b>. Guardalo: te
+            sirve para corregir datos o sumar carpas más tarde.
+          </p>
+        </section>
+      </form>
+
+      <section id="done" hidden>
+        <div class="ticket">
+          <div class="ticket-top">
+            <span class="stamp">Inscripción recibida</span>
+            <h2 class="h-done">⛺ ¡Listo!</h2>
+            <p class="lead" id="doneResumen"></p>
+            <p class="mini">Tu código de edición es</p>
+            <p class="folio" id="folioLbl">—</p>
+            <p class="mini">
+              Guardalo o sacale una captura: lo necesitás para corregir o
+              ampliar tu inscripción.
+            </p>
+          </div>
+          <div class="dash" aria-hidden="true"></div>
+          <div class="ticket-actions">
+            <button class="btn-sec" id="btnCopyFolio" type="button">
+              📋 Copiar código
+            </button>
+            <button class="btn-sec" id="btnCopyLink" type="button">
+              🔗 Copiar link de edición
+            </button>
+            <a class="btn-wa" id="btnWa" target="_blank" rel="noopener"
+              >💬 Compartir los datos por WhatsApp</a
+            >
+            <button class="btn-sec" id="btnEditNow" type="button">
+              ✏️ Corregir o agregar carpas ahora
+            </button>
+            <button class="btn-ghost" id="btnNew" type="button">
+              Inscribir otra agrupación
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <footer class="reveal">
+        <p id="orgLine"></p>
+        <p>
+          Página liviana (~30 KB), pensada para conexiones lentas. No necesita
+          apps ni cuentas.
+        </p>
+      </footer>
+    </div>
+
+    <div id="toast" role="status"></div>
+
+    <script>
+      /* ================== CONFIGURACIÓN (editá acá) ================== */
+      const CONFIG = {
+        API_URL:
+          "https://script.google.com/macros/s/AKfycbzQ6hn8LWnFMAHqxm7mh6H1FFcHWJ4uZ-AOlgTQxQP_2IC-MQHxrRmcYIE6TDzQ3Zjvzg/exec",
+        LOGO: "logo-evento.png", // ← Cambiado
+        TITULO: "Formulario de carpas",
+        NOMBRE_EVENTO: "Aventuri 2026",
+        ORGANIZACION: "Zona Este, AAN",
       };
-    })
-  };
-}
+      /* ================================================================ */
 
-function pintarDatos(d){
-  $('club').value = d.club || '';
-  $('distrito').value = d.distrito || '';
-  $('acampantes').value = d.acampantes || '';
-  rowsEl.innerHTML = '';
-  (d.carpas && d.carpas.length ? d.carpas : [{}]).forEach(c => {
-    const row = nuevaFila(c);
-    const selCap = row.querySelector('.sel-cap');
-    const numCapOtra = row.querySelector('.num-cap-otra');
-    
-    if (c.capacidad > 0 && CAPACIDADES.indexOf(c.capacidad) === -1){
-      selCap.value = 'otra';
-      numCapOtra.value = c.capacidad;
-      numCapOtra.hidden = false;
-    }
-    
-    rowsEl.appendChild(row);
-  });
-  actualizarQuitar(); actualizarResumen();
-}
+      const TIPOS = [
+        "Canadiense",
+        "Iglú",
+        "Estructural",
+        "Gazebo 2x2",
+        "Gazebo 3x3",
+      ];
+      const CAPACIDADES = [2, 4, 6, 8];
+      const DRAFT_KEY = "campamento-borrador";
+      const DEMO = !CONFIG.API_URL || CONFIG.API_URL.indexOf("PEGA_AQUI") === 0;
 
-/* ---- Resumen en vivo ---- */
-function setNum(el, val){
-  if (el.textContent !== String(val)){
-    el.textContent = val; el.classList.remove('bump'); void el.offsetWidth; el.classList.add('bump');
-  }
-}
-function actualizarResumen(){
-  const d = leerDatos();
-  const carpas = d.carpas.reduce((s,c) => s + (c.cantidad > 0 ? c.cantidad : 0), 0);
-  const plazas = d.carpas.reduce((s,c) => s + (c.cantidad > 0 && c.capacidad > 0 ? c.cantidad * c.capacidad : 0), 0);
-  setNum($('rCarpas'), carpas); setNum($('rPlazas'), plazas);
-  const est = $('rEstado');
-  if (!d.acampantes){ est.textContent = 'Completá acampantes'; est.className = 'estado neutro'; }
-  else if (!plazas){ est.textContent = 'Agregá tus carpas'; est.className = 'estado neutro'; }
-  else if (plazas >= d.acampantes){ est.textContent = '✔ Plazas suficientes'; est.className = 'estado ok'; }
-  else { est.textContent = '⚠ Faltan ' + (d.acampantes - plazas) + ' plazas'; est.className = 'estado warn'; }
-}
+      const $ = (id) => document.getElementById(id);
+      const rowsEl = $("rows");
+      let folioActual = null,
+        editando = false,
+        tDraft,
+        tToast;
 
-/* ---- Borrador automático ---- */
-function guardarBorrador(){
-  if (editando) return;
-  clearTimeout(tDraft);
-  tDraft = setTimeout(() => { try{ localStorage.setItem(DRAFT_KEY, JSON.stringify(leerDatos())); }catch(e){} }, 400);
-}
+      /* ---- Textos del encabezado y logo ---- */
+      document.title = "Inscripción — " + CONFIG.NOMBRE_EVENTO;
+      $("evento").textContent = CONFIG.NOMBRE_EVENTO + " · Registro oficial";
+      $("tituloForm").textContent = CONFIG.TITULO;
+      $("orgLine").textContent = "Organiza: " + CONFIG.ORGANIZACION;
 
-/* ---- Validación ---- */
-function enteroValido(el){ const v = Number(el.value); return v > 0 && Math.floor(v) === v; }
-function validar(){
-  let malo = null;
-  const marcar = (cont, cond) => { cont.classList.toggle('invalid', cond); if (cond && !malo) malo = cont.querySelector('input,select'); };
-  marcar($('fClub'), !$('club').value.trim());
-  marcar($('fDist'), !$('distrito').value.trim());
-  marcar($('fAc'), !enteroValido($('acampantes')));
-  [...rowsEl.children].forEach(r => {
-    [...r.querySelectorAll('.t-cell')].forEach(c => {
-      let bad = false;
-      if (c.querySelector('.sel-tipo')){
-        bad = !c.querySelector('.sel-tipo').value;
-      } else if (c.querySelector('.num-cant')){
-        bad = !enteroValido(c.querySelector('.num-cant'));
-      } else {
-        bad = !c.querySelector('.sel-cap').value;
+      if (DEMO) $("demoNote").hidden = false;
+
+      /* ---- Filas de carpas ---- */
+      function nuevaFila(d) {
+        d = d || {};
+        const row = document.createElement("div");
+        row.className = "tent-row";
+        row.innerHTML =
+          '<span class="rownum">Carpa 1</span>' +
+          '<div class="t-cell"><label class="cell-label">Tipo de carpa</label>' +
+          '<select class="sel-tipo" aria-label="Tipo de carpa"><option value="">Elegí…</option>' +
+          TIPOS.map(
+            (t) =>
+              '<option value="' +
+              t +
+              '"' +
+              (d.tipo === t ? " selected" : "") +
+              ">" +
+              t +
+              "</option>",
+          ).join("") +
+          "</select>" +
+          '<p class="err">Elegí el tipo.</p></div>' +
+          '<div class="t-cell"><label class="cell-label">Capacidad</label>' +
+          '<select class="sel-cap" aria-label="Capacidad de la carpa"><option value="">Elegí…</option>' +
+          CAPACIDADES.map(
+            (c) =>
+              '<option value="' +
+              c +
+              '"' +
+              (Number(d.capacidad) === c ? " selected" : "") +
+              ">" +
+              c +
+              " personas</option>",
+          ).join("") +
+          '<option value="0"' +
+          (d.capacidad === 0 || d.capacidad === "0" ? " selected" : "") +
+          ">No aplica (no duerme gente)</option>" +
+          '<option value="otra"' +
+          (Number(d.capacidad) > 0 &&
+          CAPACIDADES.indexOf(Number(d.capacidad)) === -1
+            ? " selected"
+            : "") +
+          ">Otra capacidad…</option>" +
+          "</select>" +
+          '<input class="num-cap-otra" type="number" min="1" step="1" inputmode="numeric" placeholder="Ej.: 10" aria-label="Otra capacidad" hidden style="margin-top:8px;background:#fffdf4;border-style:dashed">' +
+          '<p class="err">Elegí la capacidad.</p></div>' +
+          '<div class="t-cell"><label class="cell-label">Cantidad</label>' +
+          '<input class="num-cant" type="number" min="1" step="1" inputmode="numeric" aria-label="Cantidad de carpas" ' +
+          'value="' +
+          (Number(d.cantidad) > 0 ? Number(d.cantidad) : "") +
+          '" placeholder="Ej.: ¿Cuántas?"><p class="err">Número entero, mínimo 1.</p></div>' +
+          '<button type="button" class="btn-remove" aria-label="Quitar esta fila" title="Quitar fila">✕</button>';
+
+        row.querySelector(".btn-remove").addEventListener("click", () => {
+          if (rowsEl.children.length > 1) {
+            row.remove();
+            actualizarQuitar();
+            actualizarResumen();
+            guardarBorrador();
+          }
+        });
+
+        const selCap = row.querySelector(".sel-cap");
+        const numCapOtra = row.querySelector(".num-cap-otra");
+
+        const syncCap = () => {
+          numCapOtra.hidden = selCap.value !== "otra";
+        };
+
+        selCap.addEventListener("change", syncCap);
+        syncCap();
+
+        return row;
       }
-      c.classList.toggle('invalid', bad);
-      if (bad && !malo) malo = c.querySelector('select,input');
-    });
-  });
-  const ok = $('ok').checked;
-  $('okErr').classList.toggle('show', !ok);
-  if (!ok && !malo) malo = $('ok');
-  if (malo){ malo.scrollIntoView({behavior:'smooth', block:'center'}); setTimeout(() => malo.focus({preventScroll:true}), 350); }
-  return !malo;
-}
 
-/* ---- Envío ---- */
-function codigo(n){
-  const ch = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789'; let s = '';
-  for (let i = 0; i < n; i++) s += ch[Math.floor(Math.random() * ch.length)];
-  return s;
-}
-async function enviar(datos){
-  if (DEMO){
-    await new Promise(r => setTimeout(r, 800));
-    const folio = datos.folio || 'DEMO-' + codigo(4);
-    localStorage.setItem('reg:' + folio, JSON.stringify(datos));
-    return { ok:true, folio };
-  }
-  
-  if (!datos.folio) datos.folio = 'CMP-' + codigo(5);
-  
-  const payload = JSON.stringify(datos);
-  
-  try {
-    await fetch(CONFIG.API_URL, {
-      method: 'POST',
-      mode: 'no-cors',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: payload
-    });
-    
-    return { ok: true, folio: datos.folio };
-    
-  } catch (err) {
-    throw new Error('No se pudo conectar con el servidor. Revisá tu conexión.');
-  }
-}
-async function buscarDuplicado(club, distrito){
-  if (DEMO) return null;
-  
-  return new Promise((resolve) => {
-    const timeout = setTimeout(() => {
-      cleanup();
-      resolve(null);
-    }, 20000); // 20 segundos
-    
-    const callbackName = 'cbdup_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-    let resolved = false;
-    let scriptTag = null;
-    
-    function cleanup() {
-      clearTimeout(timeout);
-      if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
-      delete window[callbackName];
-    }
-    
-    window[callbackName] = function(response) {
-      if (resolved) return;
-      resolved = true;
-      cleanup();
-      if (response && response.ok) {
-        resolve(response.duplicado);
-      } else {
-        resolve(null);
+      function actualizarQuitar() {
+        const n = rowsEl.children.length;
+        [...rowsEl.children].forEach((r, i) => {
+          r.querySelector(".rownum").textContent = "Carpa " + (i + 1);
+          r.querySelector(".btn-remove").disabled = n === 1;
+        });
       }
-    };
-    
-    scriptTag = document.createElement('script');
-    scriptTag.src = CONFIG.API_URL + '?club=' + encodeURIComponent(club) + '&distrito=' + encodeURIComponent(distrito) + '&callback=' + callbackName;
-    
-    scriptTag.onerror = function() {
-      if (resolved) return;
-      resolved = true;
-      cleanup();
-      resolve(null);
-    };
-    
-    document.body.appendChild(scriptTag);
-  });
-}
 
-$('form').addEventListener('submit', async e => {
-  e.preventDefault();
-  if (!validar()) return;
-  
-  const btn = $('btnSend'); // <-- MOVIDO AQUÍ PARA EVITAR ERRORES
-  
-  // Verificar duplicado
-  const datos = leerDatos();
-  const dup = await buscarDuplicado(datos.club, datos.distrito);
-  if (dup && !folioActual){
-    const ok = confirm(
-      '⚠️ Ya existe una inscripción para "' + dup.club + '" (Distrito: ' + dup.distrito + ')\n' +
-      'Folio existente: ' + dup.folio + '\n\n' +
-      '¿Querés EDITAR esa inscripción en vez de crear una nueva?\n\n' +
-      'OK = editar la existente\n' +
-      'Cancelar = no enviar nada (revisá los datos)'
-    );
-    if (ok){
-      folioActual = dup.folio;
-      datos.folio = dup.folio;
-      $('editFolioLbl').textContent = folioActual;
-      $('editNote').hidden = false;
-    } else {
-      // El usuario canceló: NO enviar
-      $('sendErr').innerHTML = '⚠️ Envío cancelado. Ya existe una inscripción para <b>' + dup.club + '</b> con folio <b>' + dup.folio + '</b>. Si querés modificarla, usá el código de edición.';
-      $('sendErr').hidden = false;
-      $('sendErr').scrollIntoView({behavior:'smooth', block:'center'});
-      btn.disabled = false; // <-- AHORA SÍ FUNCIONA
-      $('sendLabel').textContent = 'ENVIAR INSCRIPCIÓN';
-      return; // DETIENE LA EJECUCIÓN
-    }
-  }
-  
-  btn.disabled = true;
-  $('sendLabel').innerHTML = '<span class="spinner"></span>' + (editando ? 'GUARDANDO CAMBIOS…' : 'ENVIANDO…');
-  $('sendErr').hidden = true;
-  if (folioActual) datos.folio = folioActual;
-  
-  try{
-    const res = await enviar(datos);
-    if (!res.ok) throw new Error(res.error || 'No se pudo guardar.');
-    folioActual = res.folio;
-    localStorage.removeItem(DRAFT_KEY);
-    mostrarExito(datos);
-  }catch(err){
-    const b = $('sendErr');
-    b.innerHTML = '⚠️ ' + err.message;
-    b.hidden = false; b.scrollIntoView({behavior:'smooth', block:'center'});
-  }finally{
-    btn.disabled = false;
-    $('sendLabel').textContent = editando ? 'GUARDAR CAMBIOS' : 'ENVIAR INSCRIPCIÓN';
-  }
-});
+      /* ---- Datos ---- */
+      function leerDatos() {
+        return {
+          club: $("club").value.trim(),
+          distrito: $("distrito").value.trim(),
+          acampantes: parseInt($("acampantes").value, 10) || 0,
+          carpas: [...rowsEl.children].map((r) => {
+            const selTipo = r.querySelector(".sel-tipo");
+            const selCap = r.querySelector(".sel-cap");
+            const numCapOtra = r.querySelector(".num-cap-otra");
 
-/* ---- Pantalla de éxito ---- */
-function linkEdicion(folio){ return location.href.split('#')[0].split('?')[0] + '?folio=' + encodeURIComponent(folio); }
-function mostrarExito(datos){
-  $('form').hidden = true;
-  ['editNote','loadNote'].forEach(id => $(id).hidden = true);
-  $('done').hidden = false;
-  $('folioLbl').textContent = folioActual;
-  const totalCarpas = datos.carpas.reduce((s,c) => s + c.cantidad, 0);
-  $('doneResumen').textContent = datos.club + ' · ' + datos.acampantes + ' acampantes · ' + totalCarpas + ' carpas';
-  const link = linkEdicion(folioActual);
-  $('btnCopyFolio').onclick = () => copiar(folioActual, 'Código copiado ✔');
-  $('btnCopyLink').onclick = () => copiar(link, 'Link de edición copiado ✔');
-  // Armar detalle de carpas
-const detalleCarpas = datos.carpas.map(c => {
-  const capTexto = c.capacidad === 0 ? 'sin dormir' : c.capacidad + ' pers.';
-  return '• ' + c.cantidad + 'x ' + c.tipo + ' (' + capTexto + ')';
-}).join('\n');
+            let capacidad = 0;
+            if (selCap.value === "otra") {
+              capacidad = parseInt(numCapOtra.value, 10) || 0;
+            } else {
+              capacidad = parseInt(selCap.value, 10) || 0;
+            }
 
-const mensaje = 
-  '⛺ *INSCRIPCIÓN ' + CONFIG.NOMBRE_EVENTO.toUpperCase() + '*\n' +
-  '━━━━━━━━━━━━━━━━━━\n' +
-  '️ *Club:* ' + datos.club + '\n' +
-  '📍 *Distrito:* ' + datos.distrito + '\n' +
-  '👥 *Acampantes:* ' + datos.acampantes + '\n' +
-  '━━━━━━━━━━━━━━━━━━\n' +
-  '🎪 *CARPAS:*\n' + detalleCarpas + '\n' +
-  '━━━━━━━━━━━━━━━━━━\n' +
-  ' *Código de edición:* ' + folioActual + '\n\n' +
-  ' Link para corregir o agregar carpas:\n' + link + '\n\n' +
-  '⚠️ Guardá este código, lo necesitás para cualquier cambio.';
+            return {
+              tipo: selTipo.value,
+              capacidad: capacidad,
+              cantidad: parseInt(r.querySelector(".num-cant").value, 10) || 0,
+            };
+          }),
+        };
+      }
 
-$('btnWa').href = 'https://wa.me/?text=' + encodeURIComponent(mensaje);
-  $('btnEditNow').onclick = () => { location.href = link; };
-  window.scrollTo({top:0, behavior:'smooth'});
-}
-$('btnNew').addEventListener('click', () => { location.href = location.href.split('?')[0].split('#')[0]; });
+      function pintarDatos(d) {
+        $("club").value = d.club || "";
+        $("distrito").value = d.distrito || "";
+        $("acampantes").value = d.acampantes || "";
+        rowsEl.innerHTML = "";
+        (d.carpas && d.carpas.length ? d.carpas : [{}]).forEach((c) => {
+          const row = nuevaFila(c);
+          const selCap = row.querySelector(".sel-cap");
+          const numCapOtra = row.querySelector(".num-cap-otra");
 
-async function copiar(txt, msg){
-  try{ await navigator.clipboard.writeText(txt); }
-  catch(e){
-    const ta = document.createElement('textarea'); ta.value = txt;
-    ta.style.position = 'fixed'; ta.style.opacity = '0';
-    document.body.appendChild(ta); ta.select();
-    try{ document.execCommand('copy'); }catch(e2){}
-    ta.remove();
-  }
-  toast(msg);
-}
-function toast(msg){
-  const el = $('toast'); el.textContent = msg; el.classList.add('show');
-  clearTimeout(tToast); tToast = setTimeout(() => el.classList.remove('show'), 2600);
-}
+          if (c.capacidad > 0 && CAPACIDADES.indexOf(c.capacidad) === -1) {
+            selCap.value = "otra";
+            numCapOtra.value = c.capacidad;
+            numCapOtra.hidden = false;
+          }
 
-/* ---- Cargar edición desde el link (?folio=...) ---- */
-async function traer(folio){
-  if (DEMO){
-    const raw = localStorage.getItem('reg:' + folio.toUpperCase());
-    if (!raw) return { ok:false, error:'No encontramos ninguna inscripción con el código ' + folio + '.' };
-    const d = JSON.parse(raw);
-    return { ok:true, registro:{ folio: folio.toUpperCase(), club:d.club, distrito:d.distrito, acampantes:d.acampantes, carpas:d.carpas } };
-  }
-  
-  return new Promise((resolve) => {
-    const timeout = setTimeout(() => {
-      cleanup();
-      resolve({ ok:false, error:'La conexión tardó demasiado. Revisá tu internet e intentá de nuevo.' });
-    }, 25000); // 25 segundos para mobile
-    
-    const callbackName = 'cb_' + Date.now() + '_' + Math.random().toString(36).substr(2, 5);
-    let resolved = false;
-    let scriptTag = null;
-    
-    function cleanup() {
-      clearTimeout(timeout);
-      if (scriptTag && scriptTag.parentNode) scriptTag.parentNode.removeChild(scriptTag);
-      delete window[callbackName];
-    }
-    
-    window[callbackName] = function(response) {
-      if (resolved) return;
-      resolved = true;
-      cleanup();
-      resolve(response);
-    };
-    
-    scriptTag = document.createElement('script');
-    scriptTag.src = CONFIG.API_URL + '?folio=' + encodeURIComponent(folio) + '&callback=' + callbackName;
-    
-    scriptTag.onerror = function() {
-      if (resolved) return;
-      resolved = true;
-      cleanup();
-      resolve({ ok:false, error:'No pudimos conectar. Revisá tu conexión e intentá de nuevo.' });
-    };
-    
-    document.body.appendChild(scriptTag);
-  });
-}
-/* ---- Interacciones en vivo ---- */
-$('form').addEventListener('input', e => {
-  const cont = e.target.closest('.field,.t-cell');
-  if (cont && cont.classList.contains('invalid')) cont.classList.remove('invalid');
-  if (e.target.id === 'ok') $('okErr').classList.remove('show');
-  actualizarResumen(); guardarBorrador();
-});
-$('btnAdd').addEventListener('click', () => {
-  if (rowsEl.children.length >= 15){ toast('Máximo 15 filas por formulario.'); return; }
-  rowsEl.appendChild(nuevaFila({}));
-  actualizarQuitar(); actualizarResumen(); guardarBorrador();
-  rowsEl.lastElementChild.scrollIntoView({behavior:'smooth', block:'nearest'});
-});
-/* ---- Pantalla de inicio ---- */
-$('btnNueva').addEventListener('click', () => {
-  $('pantallaInicio').hidden = true;
-  $('loadNote').hidden = true;
-  $('loadNote').style.display = 'none';
-  $('form').hidden = false;
-  $('form').scrollIntoView({behavior:'smooth', block:'start'});
-});
+          rowsEl.appendChild(row);
+        });
+        actualizarQuitar();
+        actualizarResumen();
+      }
 
-$('btnModificar').addEventListener('click', () => {
-  $('pantallaInicio').hidden = true;
-  $('form').hidden = true;
-  $('loadNote').hidden = false;
-  $('loadNote').style.display = 'block';
-  $('inputFolio').focus();
-});
+      /* ---- Resumen en vivo ---- */
+      function setNum(el, val) {
+        if (el.textContent !== String(val)) {
+          el.textContent = val;
+          el.classList.remove("bump");
+          void el.offsetWidth;
+          el.classList.add("bump");
+        }
+      }
+      function actualizarResumen() {
+        const d = leerDatos();
+        const carpas = d.carpas.reduce(
+          (s, c) => s + (c.cantidad > 0 ? c.cantidad : 0),
+          0,
+        );
+        const plazas = d.carpas.reduce(
+          (s, c) =>
+            s +
+            (c.cantidad > 0 && c.capacidad > 0 ? c.cantidad * c.capacidad : 0),
+          0,
+        );
+        setNum($("rCarpas"), carpas);
+        setNum($("rPlazas"), plazas);
+        const est = $("rEstado");
+        if (!d.acampantes) {
+          est.textContent = "Completá acampantes";
+          est.className = "estado neutro";
+        } else if (!plazas) {
+          est.textContent = "Agregá tus carpas";
+          est.className = "estado neutro";
+        } else if (plazas >= d.acampantes) {
+          est.textContent = "✔ Plazas suficientes";
+          est.className = "estado ok";
+        } else {
+          est.textContent = "⚠ Faltan " + (d.acampantes - plazas) + " plazas";
+          est.className = "estado warn";
+        }
+      }
 
-$('btnVolverInicio').addEventListener('click', () => {
-  $('loadNote').hidden = true;
-  $('loadNote').style.display = 'none';
-  $('form').hidden = true;
-  $('pantallaInicio').hidden = false;
-});
+      /* ---- Borrador automático ---- */
+      function guardarBorrador() {
+        if (editando) return;
+        clearTimeout(tDraft);
+        tDraft = setTimeout(() => {
+          try {
+            localStorage.setItem(DRAFT_KEY, JSON.stringify(leerDatos()));
+          } catch (e) {}
+        }, 400);
+      }
 
-/* ---- Búsqueda manual de folio ---- */
-$('btnBuscar').addEventListener('click', async () => {
-  const folio = $('inputFolio').value.trim().toUpperCase();
-  if (!folio) { $('loadMsg').textContent = 'Escribí un código.'; return; }
-  $('loadMsg').textContent = 'Buscando… (si tarda, es porque estamos despertando el servidor)';
-  const res = await traer(folio);
-  if (res.ok) {
-    folioActual = res.registro.folio;
-    pintarDatos(res.registro);
-    $('ok').checked = true;
-    $('sendLabel').textContent = 'GUARDAR CAMBIOS';
-    $('editFolioLbl').textContent = folioActual;
-    $('loadNote').hidden = true;
-    $('loadNote').style.display = 'none';
-    $('editNote').hidden = false;
-    $('form').hidden = false;
-    $('form').scrollIntoView({behavior:'smooth', block:'start'});
-  } else {
-    $('loadMsg').textContent = '⚠️ ' + res.error;
-  }
-});
+      /* ---- Validación ---- */
+      function enteroValido(el) {
+        const v = Number(el.value);
+        return v > 0 && Math.floor(v) === v;
+      }
+      function validar() {
+        let malo = null;
+        const marcar = (cont, cond) => {
+          cont.classList.toggle("invalid", cond);
+          if (cond && !malo) malo = cont.querySelector("input,select");
+        };
+        marcar($("fClub"), !$("club").value.trim());
+        marcar($("fDist"), !$("distrito").value.trim());
+        marcar($("fAc"), !enteroValido($("acampantes")));
+        [...rowsEl.children].forEach((r) => {
+          [...r.querySelectorAll(".t-cell")].forEach((c) => {
+            let bad = false;
+            if (c.querySelector(".sel-tipo")) {
+              bad = !c.querySelector(".sel-tipo").value;
+            } else if (c.querySelector(".num-cant")) {
+              bad = !enteroValido(c.querySelector(".num-cant"));
+            } else {
+              bad = !c.querySelector(".sel-cap").value;
+            }
+            c.classList.toggle("invalid", bad);
+            if (bad && !malo) malo = c.querySelector("select,input");
+          });
+        });
+        const ok = $("ok").checked;
+        $("okErr").classList.toggle("show", !ok);
+        if (!ok && !malo) malo = $("ok");
+        if (malo) {
+          malo.scrollIntoView({ behavior: "smooth", block: "center" });
+          setTimeout(() => malo.focus({ preventScroll: true }), 350);
+        }
+        return !malo;
+      }
 
-$('inputFolio').addEventListener('input', e => {
-  e.target.value = e.target.value.toUpperCase();
-});
+      /* ---- Envío ---- */
+      function codigo(n) {
+        const ch = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+        let s = "";
+        for (let i = 0; i < n; i++)
+          s += ch[Math.floor(Math.random() * ch.length)];
+        return s;
+      }
+      function esperar(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
 
-/* ---- Inicio ---- */
-(async function init(){
-  const folioURL = new URLSearchParams(location.search).get('folio');
-  
-  // Ocultar todo primero de forma absoluta
-  $('pantallaInicio').hidden = true;
-  $('loadNote').hidden = true;
-  $('loadNote').style.display = 'none';
-  $('form').hidden = true;
-  $('editNote').hidden = true;
-  
-  if (folioURL){
-    // Si viene con ?folio= en la URL, va directo a editar
-    editando = true;
-    $('form').hidden = false;
-    $('loadNote').hidden = false;
-    $('loadNote').style.display = 'block';
-    $('inputFolio').value = folioURL.toUpperCase();
-    const res = await traer(folioURL);
-    if (res.ok){
-      folioActual = res.registro.folio;
-      pintarDatos(res.registro);
-      $('ok').checked = true;
-      $('sendLabel').textContent = 'GUARDAR CAMBIOS';
-      $('editFolioLbl').textContent = folioActual;
-      $('loadNote').hidden = true;
-      $('loadNote').style.display = 'none';
-      $('editNote').hidden = false;
-    } else {
-      $('loadMsg').textContent = '⚠️ ' + res.error;
-      pintarDatos({});
-    }
-  } else {
-    // Mostrar solo pantalla de inicio
-    $('pantallaInicio').hidden = false;
-    $('loadNote').hidden = true;
-    $('loadNote').style.display = 'none';
-    $('form').hidden = true;
-    $('editNote').hidden = true;
-    
-    const draft = localStorage.getItem(DRAFT_KEY);
-    if (draft){
-      try{ pintarDatos(JSON.parse(draft)); }
-      catch(e){ pintarDatos({}); }
-    } else {
-      pintarDatos({});
-    }
-  }
-  actualizarQuitar(); actualizarResumen();
-})();
-</script>
-</body>
+      async function enviar(datos) {
+        if (DEMO) {
+          await esperar(800);
+          localStorage.setItem("reg:" + datos.folio, JSON.stringify(datos));
+          return { ok: true, folio: datos.folio };
+        }
+
+        const payload = JSON.stringify(datos);
+
+        // PASO 1: Enviar (2 intentos por si falla la red del celular)
+        let enviado = false;
+        for (let i = 0; i < 2 && !enviado; i++) {
+          try {
+            await fetch(CONFIG.API_URL, {
+              method: "POST",
+              mode: "no-cors",
+              headers: { "Content-Type": "text/plain;charset=utf-8" },
+              body: payload,
+            });
+            enviado = true;
+          } catch (err) {
+            await esperar(1500);
+          }
+        }
+        if (!enviado)
+          throw new Error(
+            "No se pudo enviar. Revisá tu conexión y apretá el botón de nuevo.",
+          );
+
+        // PASO 2: CONFIRMAR que quedó guardado (busca el folio hasta 4 veces)
+        const esperas = [3000, 4000, 5000, 6000];
+        for (const ms of esperas) {
+          await esperar(ms);
+          try {
+            const ver = await traer(datos.folio);
+            if (ver.ok) return { ok: true, folio: datos.folio };
+          } catch (e) {
+            /* sigue buscando */
+          }
+        }
+
+        // PASO 3: Si no se confirmó, error CON REINTENTO SEGURO
+        throw new Error(
+          "El servidor no confirmó el guardado. Tus datos siguen en pantalla: apretá el botón de nuevo para reintentar (usa el mismo código, no se duplica).",
+        );
+      }
+      async function buscarDuplicado(club, distrito) {
+        if (DEMO) return null;
+
+        return new Promise((resolve) => {
+          const timeout = setTimeout(() => {
+            cleanup();
+            resolve(null);
+          }, 20000); // 20 segundos
+
+          const callbackName =
+            "cbdup_" +
+            Date.now() +
+            "_" +
+            Math.random().toString(36).substr(2, 5);
+          let resolved = false;
+          let scriptTag = null;
+
+          function cleanup() {
+            clearTimeout(timeout);
+            if (scriptTag && scriptTag.parentNode)
+              scriptTag.parentNode.removeChild(scriptTag);
+            delete window[callbackName];
+          }
+
+          window[callbackName] = function (response) {
+            if (resolved) return;
+            resolved = true;
+            cleanup();
+            if (response && response.ok) {
+              resolve(response.duplicado);
+            } else {
+              resolve(null);
+            }
+          };
+
+          scriptTag = document.createElement("script");
+          scriptTag.src =
+            CONFIG.API_URL +
+            "?club=" +
+            encodeURIComponent(club) +
+            "&distrito=" +
+            encodeURIComponent(distrito) +
+            "&callback=" +
+            callbackName;
+
+          scriptTag.onerror = function () {
+            if (resolved) return;
+            resolved = true;
+            cleanup();
+            resolve(null);
+          };
+
+          document.body.appendChild(scriptTag);
+        });
+      }
+
+      /* Función auxiliar para esperas */
+      function esperar(ms) {
+        return new Promise((r) => setTimeout(r, ms));
+      }
+
+      /* ---- Envío del formulario ---- */
+      $("form").addEventListener("submit", async (e) => {
+        e.preventDefault();
+        if (!validar()) return;
+
+        const btn = $("btnSend");
+
+        // Verificar duplicado
+        const datos = leerDatos();
+        const dup = await buscarDuplicado(datos.club, datos.distrito);
+        if (dup && !folioActual) {
+          const ok = confirm(
+            '⚠️ Ya existe una inscripción para "' +
+              dup.club +
+              '" (Distrito: ' +
+              dup.distrito +
+              ")\n" +
+              "Folio existente: " +
+              dup.folio +
+              "\n\n" +
+              "¿Querés EDITAR esa inscripción en vez de crear una nueva?\n\n" +
+              "OK = editar la existente\n" +
+              "Cancelar = no enviar nada (revisá los datos)",
+          );
+          if (ok) {
+            folioActual = dup.folio;
+            datos.folio = dup.folio;
+            $("editFolioLbl").textContent = folioActual;
+            $("editNote").hidden = false;
+          } else {
+            $("sendErr").innerHTML =
+              "⚠️ Envío cancelado. Ya existe una inscripción para <b>" +
+              dup.club +
+              "</b> con folio <b>" +
+              dup.folio +
+              "</b>. Si querés modificarla, usá el código de edición.";
+            $("sendErr").hidden = false;
+            $("sendErr").scrollIntoView({
+              behavior: "smooth",
+              block: "center",
+            });
+            btn.disabled = false;
+            $("sendLabel").textContent = "ENVIAR INSCRIPCIÓN";
+            return;
+          }
+        }
+
+        btn.disabled = true;
+        $("sendLabel").innerHTML =
+          '<span class="spinner"></span>' +
+          (editando ? "GUARDANDO CAMBIOS…" : "ENVIANDO…");
+        $("sendErr").hidden = true;
+
+        // ★ CAMBIO 1: Folio FIJO antes de enviar (evita duplicados en reintentos)
+        if (folioActual) datos.folio = folioActual;
+        if (!datos.folio) datos.folio = "CMP-" + codigo(5);
+        folioActual = datos.folio;
+
+        try {
+          const res = await enviar(datos);
+          if (!res.ok) throw new Error(res.error || "No se pudo guardar.");
+          folioActual = res.folio;
+          localStorage.removeItem(DRAFT_KEY);
+          mostrarExito(datos);
+        } catch (err) {
+          const b = $("sendErr");
+          b.innerHTML = "⚠️ " + err.message;
+          b.hidden = false;
+          b.scrollIntoView({ behavior: "smooth", block: "center" });
+          // ★ CAMBIO 2: Botón dice "REINTENTAR" al fallar
+          $("sendLabel").textContent = "REINTENTAR ENVÍO";
+        } finally {
+          btn.disabled = false;
+        }
+      });
+
+      /* ---- Pantalla de éxito ---- */
+      function linkEdicion(folio) {
+        return (
+          location.href.split("#")[0].split("?")[0] +
+          "?folio=" +
+          encodeURIComponent(folio)
+        );
+      }
+      function mostrarExito(datos) {
+        $("form").hidden = true;
+        ["editNote", "loadNote"].forEach((id) => ($(id).hidden = true));
+        $("done").hidden = false;
+        $("folioLbl").textContent = folioActual;
+        const totalCarpas = datos.carpas.reduce((s, c) => s + c.cantidad, 0);
+        $("doneResumen").textContent =
+          datos.club +
+          " · " +
+          datos.acampantes +
+          " acampantes · " +
+          totalCarpas +
+          " carpas";
+        const link = linkEdicion(folioActual);
+        $("btnCopyFolio").onclick = () =>
+          copiar(folioActual, "Código copiado ✔");
+        $("btnCopyLink").onclick = () =>
+          copiar(link, "Link de edición copiado ✔");
+        // Armar detalle de carpas
+        const detalleCarpas = datos.carpas
+          .map((c) => {
+            const capTexto =
+              c.capacidad === 0 ? "sin dormir" : c.capacidad + " pers.";
+            return "• " + c.cantidad + "x " + c.tipo + " (" + capTexto + ")";
+          })
+          .join("\n");
+
+        const mensaje =
+          "⛺ *INSCRIPCIÓN " +
+          CONFIG.NOMBRE_EVENTO.toUpperCase() +
+          "*\n" +
+          "━━━━━━━━━━━━━━━━━━\n" +
+          "️ *Club:* " +
+          datos.club +
+          "\n" +
+          "📍 *Distrito:* " +
+          datos.distrito +
+          "\n" +
+          "👥 *Acampantes:* " +
+          datos.acampantes +
+          "\n" +
+          "━━━━━━━━━━━━━━━━━━\n" +
+          "🎪 *CARPAS:*\n" +
+          detalleCarpas +
+          "\n" +
+          "━━━━━━━━━━━━━━━━━━\n" +
+          " *Código de edición:* " +
+          folioActual +
+          "\n\n" +
+          " Link para corregir o agregar carpas:\n" +
+          link +
+          "\n\n" +
+          "⚠️ Guardá este código, lo necesitás para cualquier cambio.";
+
+        $("btnWa").href = "https://wa.me/?text=" + encodeURIComponent(mensaje);
+        $("btnEditNow").onclick = () => {
+          location.href = link;
+        };
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+      $("btnNew").addEventListener("click", () => {
+        location.href = location.href.split("?")[0].split("#")[0];
+      });
+
+      async function copiar(txt, msg) {
+        try {
+          await navigator.clipboard.writeText(txt);
+        } catch (e) {
+          const ta = document.createElement("textarea");
+          ta.value = txt;
+          ta.style.position = "fixed";
+          ta.style.opacity = "0";
+          document.body.appendChild(ta);
+          ta.select();
+          try {
+            document.execCommand("copy");
+          } catch (e2) {}
+          ta.remove();
+        }
+        toast(msg);
+      }
+      function toast(msg) {
+        const el = $("toast");
+        el.textContent = msg;
+        el.classList.add("show");
+        clearTimeout(tToast);
+        tToast = setTimeout(() => el.classList.remove("show"), 2600);
+      }
+
+      /* ---- Cargar edición desde el link (?folio=...) ---- */
+      async function traer(folio) {
+        if (DEMO) {
+          const raw = localStorage.getItem("reg:" + folio.toUpperCase());
+          if (!raw)
+            return {
+              ok: false,
+              error:
+                "No encontramos ninguna inscripción con el código " +
+                folio +
+                ".",
+            };
+          const d = JSON.parse(raw);
+          return {
+            ok: true,
+            registro: {
+              folio: folio.toUpperCase(),
+              club: d.club,
+              distrito: d.distrito,
+              acampantes: d.acampantes,
+              carpas: d.carpas,
+            },
+          };
+        }
+
+        return new Promise((resolve) => {
+          const timeout = setTimeout(() => {
+            cleanup();
+            resolve({
+              ok: false,
+              error:
+                "La conexión tardó demasiado. Revisá tu internet e intentá de nuevo.",
+            });
+          }, 25000); // 25 segundos para mobile
+
+          const callbackName =
+            "cb_" + Date.now() + "_" + Math.random().toString(36).substr(2, 5);
+          let resolved = false;
+          let scriptTag = null;
+
+          function cleanup() {
+            clearTimeout(timeout);
+            if (scriptTag && scriptTag.parentNode)
+              scriptTag.parentNode.removeChild(scriptTag);
+            delete window[callbackName];
+          }
+
+          window[callbackName] = function (response) {
+            if (resolved) return;
+            resolved = true;
+            cleanup();
+            resolve(response);
+          };
+
+          scriptTag = document.createElement("script");
+          scriptTag.src =
+            CONFIG.API_URL +
+            "?folio=" +
+            encodeURIComponent(folio) +
+            "&callback=" +
+            callbackName;
+
+          scriptTag.onerror = function () {
+            if (resolved) return;
+            resolved = true;
+            cleanup();
+            resolve({
+              ok: false,
+              error:
+                "No pudimos conectar. Revisá tu conexión e intentá de nuevo.",
+            });
+          };
+
+          document.body.appendChild(scriptTag);
+        });
+      }
+      /* ---- Interacciones en vivo ---- */
+      $("form").addEventListener("input", (e) => {
+        const cont = e.target.closest(".field,.t-cell");
+        if (cont && cont.classList.contains("invalid"))
+          cont.classList.remove("invalid");
+        if (e.target.id === "ok") $("okErr").classList.remove("show");
+        actualizarResumen();
+        guardarBorrador();
+      });
+      $("btnAdd").addEventListener("click", () => {
+        if (rowsEl.children.length >= 15) {
+          toast("Máximo 15 filas por formulario.");
+          return;
+        }
+        rowsEl.appendChild(nuevaFila({}));
+        actualizarQuitar();
+        actualizarResumen();
+        guardarBorrador();
+        rowsEl.lastElementChild.scrollIntoView({
+          behavior: "smooth",
+          block: "nearest",
+        });
+      });
+      /* ---- Pantalla de inicio ---- */
+      $("btnNueva").addEventListener("click", () => {
+        $("pantallaInicio").hidden = true;
+        $("loadNote").hidden = true;
+        $("loadNote").style.display = "none";
+        $("form").hidden = false;
+        $("form").scrollIntoView({ behavior: "smooth", block: "start" });
+      });
+
+      $("btnModificar").addEventListener("click", () => {
+        $("pantallaInicio").hidden = true;
+        $("form").hidden = true;
+        $("loadNote").hidden = false;
+        $("loadNote").style.display = "block";
+        $("inputFolio").focus();
+      });
+
+      $("btnVolverInicio").addEventListener("click", () => {
+        $("loadNote").hidden = true;
+        $("loadNote").style.display = "none";
+        $("form").hidden = true;
+        $("pantallaInicio").hidden = false;
+      });
+
+      /* ---- Búsqueda manual de folio ---- */
+      $("btnBuscar").addEventListener("click", async () => {
+        const folio = $("inputFolio").value.trim().toUpperCase();
+        if (!folio) {
+          $("loadMsg").textContent = "Escribí un código.";
+          return;
+        }
+        $("loadMsg").textContent =
+          "Buscando… (si tarda, es porque estamos despertando el servidor)";
+        const res = await traer(folio);
+        if (res.ok) {
+          folioActual = res.registro.folio;
+          pintarDatos(res.registro);
+          $("ok").checked = true;
+          $("sendLabel").textContent = "GUARDAR CAMBIOS";
+          $("editFolioLbl").textContent = folioActual;
+          $("loadNote").hidden = true;
+          $("loadNote").style.display = "none";
+          $("editNote").hidden = false;
+          $("form").hidden = false;
+          $("form").scrollIntoView({ behavior: "smooth", block: "start" });
+        } else {
+          $("loadMsg").textContent = "⚠️ " + res.error;
+        }
+      });
+
+      $("inputFolio").addEventListener("input", (e) => {
+        e.target.value = e.target.value.toUpperCase();
+      });
+
+      /* ---- Inicio ---- */
+      (async function init() {
+        const folioURL = new URLSearchParams(location.search).get("folio");
+
+        // Ocultar todo primero de forma absoluta
+        $("pantallaInicio").hidden = true;
+        $("loadNote").hidden = true;
+        $("loadNote").style.display = "none";
+        $("form").hidden = true;
+        $("editNote").hidden = true;
+
+        if (folioURL) {
+          // Si viene con ?folio= en la URL, va directo a editar
+          editando = true;
+          $("form").hidden = false;
+          $("loadNote").hidden = false;
+          $("loadNote").style.display = "block";
+          $("inputFolio").value = folioURL.toUpperCase();
+          const res = await traer(folioURL);
+          if (res.ok) {
+            folioActual = res.registro.folio;
+            pintarDatos(res.registro);
+            $("ok").checked = true;
+            $("sendLabel").textContent = "GUARDAR CAMBIOS";
+            $("editFolioLbl").textContent = folioActual;
+            $("loadNote").hidden = true;
+            $("loadNote").style.display = "none";
+            $("editNote").hidden = false;
+          } else {
+            $("loadMsg").textContent = "⚠️ " + res.error;
+            pintarDatos({});
+          }
+        } else {
+          // Mostrar solo pantalla de inicio
+          $("pantallaInicio").hidden = false;
+          $("loadNote").hidden = true;
+          $("loadNote").style.display = "none";
+          $("form").hidden = true;
+          $("editNote").hidden = true;
+
+          const draft = localStorage.getItem(DRAFT_KEY);
+          if (draft) {
+            try {
+              pintarDatos(JSON.parse(draft));
+            } catch (e) {
+              pintarDatos({});
+            }
+          } else {
+            pintarDatos({});
+          }
+        }
+        actualizarQuitar();
+        actualizarResumen();
+      })();
+    </script>
+  </body>
 </html>
