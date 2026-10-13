@@ -1403,6 +1403,24 @@
               </div>
             </div>
           </div>
+          <!-- Quinchos -->
+          <div class="carpa-especial">
+            <label class="check">
+              <input type="checkbox" id="tieneQuincho" />
+              <span>🏠 Alquilaron quinchos</span>
+            </label>
+            <div class="dimensiones-wrap" id="quinchoWrap" hidden>
+              <div class="field">
+                <label for="quinchoResponsable">Nombre del responsable</label>
+                <input
+                  type="text"
+                  id="quinchoResponsable"
+                  placeholder="Ej.: Juan Pérez"
+                />
+                <p class="err">Completá el nombre del responsable.</p>
+              </div>
+            </div>
+          </div>
         </div>
 
         <section class="card reveal">
@@ -1630,6 +1648,8 @@
           tieneComedor: $("tieneComedor").checked,
           comedorAncho: Number($("comedorAncho").value) || 0,
           comedorLargo: Number($("comedorLargo").value) || 0,
+          tieneQuincho: $("tieneQuincho").checked,
+          quinchoResponsable: $("quinchoResponsable").value.trim(),
         };
       }
 
@@ -1662,6 +1682,16 @@
         $("dimComedorWrap").hidden = true;
         $("comedorAncho").value = "";
         $("comedorLargo").value = "";
+        // Quinchos: resetear y cargar si corresponde
+        $("tieneQuincho").checked = false;
+        $("quinchoWrap").hidden = true;
+        $("quinchoResponsable").value = "";
+        if (d.tieneQuincho) {
+          $("tieneQuincho").checked = true;
+          $("quinchoWrap").hidden = false;
+          if (d.quinchoResponsable)
+            $("quinchoResponsable").value = d.quinchoResponsable;
+        }
 
         // Si trae carpa cocina, cargar sus datos
         if (d.tieneCocina) {
@@ -1816,6 +1846,16 @@
           if ((!anchoOk || !largoOk) && !malo) malo = $("comedorAncho");
         } else {
           $("dimComedorWrap").classList.remove("invalid");
+        }
+
+        if (
+          $("tieneQuincho").checked &&
+          !$("quinchoResponsable").value.trim()
+        ) {
+          $("quinchoWrap").classList.add("invalid");
+          if (!malo) malo = $("quinchoResponsable");
+        } else {
+          $("quinchoWrap").classList.remove("invalid");
         }
 
         if (malo) {
@@ -2286,6 +2326,12 @@
       });
 
       // ---- Listeners de carpas especiales ----
+      $("tieneQuincho").addEventListener("change", (e) => {
+        $("quinchoWrap").hidden = !e.target.checked;
+        if (!e.target.checked) {
+          $("quinchoResponsable").value = "";
+        }
+      });
       $("tieneCocina").addEventListener("change", (e) => {
         $("dimCocinaWrap").hidden = !e.target.checked;
         if (!e.target.checked) {
