@@ -1264,7 +1264,7 @@
                 maxlength="60"
                 placeholder="Ej.: Distrito 3"
               />
-              <p class="err">Escribí el distrito.</p>
+              <p class="err">Completá el distrito sin usar "/" (se convierte en fecha).</p>
             </div>
           </div>
           <div class="field half" id="fAc">
@@ -1809,7 +1809,8 @@
         };
 
         marcar($("fClub"), !$("club").value.trim());
-        marcar($("fDist"), !$("distrito").value.trim());
+        const distConBarra = $("distrito").value.includes("/");
+        marcar($("fDist"), distConBarra || !$("distrito").value.trim());
         marcar($("fAc"), !enteroValido($("acampantes")));
 
         [...rowsEl.children].forEach((r) => {
