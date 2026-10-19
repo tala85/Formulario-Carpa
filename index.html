@@ -1325,7 +1325,8 @@
               <h2>Carpa cocina y comedor</h2>
               <p class="hint">
                 Indicá si llevan estas carpas comedor o cocina y sus dimensiones
-                armadas. Si alquilaron quinchos por favor tildar la opción al final y colocar el responsable que figura cuando alquilaron.
+                armadas. Si alquilaron quinchos por favor tildar la opción al
+                final y colocar el responsable que figura cuando alquilaron.
               </p>
             </div>
           </div>
@@ -1819,7 +1820,12 @@
             } else if (c.querySelector(".num-cant")) {
               bad = !enteroValido(c.querySelector(".num-cant"));
             } else {
-              bad = !c.querySelector(".sel-cap").value;
+              const selCap = c.querySelector(".sel-cap");
+              const numOtra = c.querySelector(".num-cap-otra");
+              bad =
+                !selCap.value ||
+                (selCap.value === "otra" &&
+                  !(Number(numOtra ? numOtra.value : 0) > 0));
             }
             c.classList.toggle("invalid", bad);
             if (bad && !malo) malo = c.querySelector("select,input");
