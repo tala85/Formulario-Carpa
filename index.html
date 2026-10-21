@@ -1264,7 +1264,9 @@
                 maxlength="60"
                 placeholder="Ej.: Distrito 3"
               />
-              <p class="err">Completá el distrito sin usar "/" (se convierte en fecha).</p>
+              <p class="err">
+                Completá el distrito sin usar "/" (se convierte en fecha).
+              </p>
             </div>
           </div>
           <div class="field half" id="fAc">
@@ -1290,9 +1292,12 @@
               <h2>Carpas</h2>
               <p class="hint">
                 Una fila por cada tipo de carpa o gazebo. Ej.:
-                <b>Si tienen 3 carpas Iglú de 4 personas, en Tipo De Carpa se elije Iglu, en capacidad se elije 4 personas y en cantidad se pone 3 </b>. Si tu carpa no está en la
-                lista, elegí <b>«Otra…»</b> y escribila. Podés agregar todas las
-                filas que necesites.
+                <b
+                  >Si tienen 3 carpas Iglú de 4 personas, en Tipo De Carpa se
+                  elije Iglu, en capacidad se elije 4 personas y en cantidad se
+                  pone 3 </b
+                >. Si tu carpa no está en la lista, elegí <b>«Otra…»</b> y
+                escribila. Podés agregar todas las filas que necesites.
               </p>
             </div>
           </div>
@@ -2461,6 +2466,41 @@
         }
         actualizarQuitar();
         actualizarResumen();
+      })();
+      /* ===== CONTROL DE CARGAS: revisar estado al abrir ===== */
+      function cerrarFormulario(mensaje) {
+        const banner = document.createElement("div");
+        banner.style.cssText =
+          "position:fixed;top:0;left:0;right:0;z-index:9999;background:#8b1e1e;color:#fff;padding:12px;text-align:center;font-weight:bold;box-shadow:0 2px 8px rgba(0,0,0,.3);";
+        banner.textContent =
+          "🔒 " + (mensaje || "Las inscripciones están cerradas.");
+        document.body.prepend(banner);
+        const btn =
+          document.getElementById("btnEnviar") ||
+          document.querySelector('button[type="submit"]');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = "🔒 INSCRIPCIONES CERRADAS";
+        }
+        const ok = document.getElementById("ok");
+        if (ok) ok.disabled = true;
+      }
+
+      (function revisarEstadoForm() {
+        try {
+          const cb = "cbEstado_" + Date.now();
+          window[cb] = function (data) {
+            delete window[cb];
+            if (data && data.ok && data.habilitado === false)
+              cerrarFormulario(data.mensaje);
+          };
+          const s = document.createElement("script");
+          s.src = CONFIG.API_URL + "?estado=1&callback=" + cb;
+          s.onerror = function () {
+            delete window[cb];
+          };
+          document.body.appendChild(s);
+        } catch (e) {}
       })();
     </script>
 
